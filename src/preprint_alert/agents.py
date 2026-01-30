@@ -163,7 +163,9 @@ Write a compelling, free-form article that:
 2. Weaves together the papers into a narrative - don't just list them
 3. Highlights the coolest methodological insights
 4. Explains why these advances matter
-5. Naturally embeds links to papers using markdown: [paper title](url)
+
+CRITICAL: Every time you mention a paper, you MUST include a markdown link to it. Use the exact URLs provided.
+Format: [Paper Title](url) - e.g., [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
 
 Write in an engaging, accessible style - like a blog post from a researcher who's excited about what they found. Avoid dry academic language.
 
@@ -182,8 +184,8 @@ async def report_writer_node(state: AgentState) -> AgentState:
 
     # Format analyses for the report writer
     analyses_text = "\n\n---\n\n".join(
-        f"Paper: {a.paper.title}\n"
-        f"Link: {a.paper.link}\n"
+        f"PAPER: {a.paper.title}\n"
+        f"URL (use this in markdown links): {a.paper.link}\n"
         f"Authors: {', '.join(a.paper.authors[:5])}\n"
         f"Analysis:\n{a.methodology_insights}"
         for a in analyses

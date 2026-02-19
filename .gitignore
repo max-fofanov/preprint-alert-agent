@@ -18,8 +18,8 @@ build/
 *.swp
 *.swo
 
-# Reports (optional - you may want to track these)
-reports/
+# Reports are tracked so the site builder can access them in CI
+# reports/
 
 # OS
 .DS_Store

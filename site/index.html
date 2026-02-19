@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preprint Alert</title>
+    <style>
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #353740;
+    --text-secondary: #6e6e80;
+    --bg: #ffffff;
+    --bg-secondary: #f7f7f8;
+    --border: #e5e5e6;
+    --accent: #10a37f;
+    --link: #10a37f;
+}
+
+body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    margin-bottom: 48px;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-header a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Index page */
+.index-hero {
+    padding: 80px 0 48px;
+}
+
+.index-hero h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 44px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+}
+
+.index-hero p {
+    font-size: 19px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+}
+
+.report-item:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.report-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.report-item h2 a:hover {
+    color: var(--accent);
+}
+
+.report-excerpt {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Article page */
+.article-header {
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.article-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+}
+
+.article-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-body {
+    padding-bottom: 80px;
+}
+
+.article-body h2,
+.article-body h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.article-body h2 {
+    font-size: 30px;
+    line-height: 1.25;
+}
+
+.article-body h3 {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+}
+
+.article-body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.article-body strong {
+    font-weight: 600;
+}
+
+.article-body em {
+    font-style: italic;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin: 32px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body code {
+    font-family: 'Söhne Mono', 'Menlo', monospace;
+    font-size: 0.9em;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article-body ul,
+.article-body ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.article-body li {
+    margin-bottom: 8px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 40px 0 0;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-title">Preprint Alert</a>
+            <nav class="site-nav">
+                <a href="index.html">Archive</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="index-hero">
+            <h1>Preprint Alert</h1>
+            <p>AI-curated highlights from today's arXiv papers</p>
+        </div>
+        <ul class="report-list">
+            
+        <li class="report-item">
+            <div class="report-date">February 19, 2026</div>
+            <h2><a href="report-2026-02-19.html">The Hidden Mechanics of How LLMs *Really* Work</a></h2>
+            <p class="report-excerpt">Today’s arXiv drop is a masterclass in looking under the hood. Forget benchmarks and leaderboards—the most exciting papers aren’t about *what* large language models can do, but **how they do it, and h...</p>
+        </li>
+        <li class="report-item">
+            <div class="report-date">February 02, 2026</div>
+            <h2><a href="report-2026-02-02.html">Report 2026-02-02</a></h2>
+            <p class="report-excerpt">The boundaries between how we train, how we interpret, and how we contain large language models are blurring faster than ever. Today’s arXiv drop isn't a collection of incremental tweaks; it's a serie...</p>
+        </li>
+        <li class="report-item">
+            <div class="report-date">January 30, 2026</div>
+            <h2><a href="report-2026-01-30.html">The Dawn of Conscious Agents: When LLMs Learn to Ask, Doubt, and Grow</a></h2>
+            <p class="report-excerpt">Today's arXiv haul reads like a manifesto for the next generation of AI agents. We're witnessing a fundamental shift: from models that merely *answer* to agents that *inquire*, from systems that passi...</p>
+        </li>
+        <li class="report-item">
+            <div class="report-date">January 29, 2026</div>
+            <h2><a href="report-2026-01-29.html">Agents Learn to Think, Plan, and Debate: The Dawn of Strategic AI</a></h2>
+            <p class="report-excerpt">If you've ever watched a master chess player, you don't just see them making moves—you witness a hidden symphony of calculation, prediction, and adaptation. Today's arXiv drop suggests AI is learning ...</p>
+        </li>
+        </ul>
+    </main>
+    <footer>
+        <div class="container">Generated by Preprint Alert Agent</div>
+    </footer>
+</body>
+</html>

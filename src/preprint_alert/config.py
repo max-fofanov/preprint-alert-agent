@@ -31,9 +31,7 @@ def get_llm() -> ChatOpenAI:
 # Research interests - customize this to match your interests
 RESEARCH_INTERESTS = """
 I'm interested in:
-- Agents
-- Reinforcement learning
-- Self-improvement
+- Reasoning/thinking
 
 I'm less interested in:
 - Incremental improvements on existing benchmarks

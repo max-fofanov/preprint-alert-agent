@@ -6,6 +6,7 @@ from datetime import datetime
 from pathlib import Path
 
 from .agents import run_agent
+from .site_builder import build_site
 
 
 def get_report_path() -> Path:
@@ -28,6 +29,10 @@ async def async_main(output_path: Path | None = None) -> None:
 
     output_path.write_text(report)
     print(f"\n✅ Report saved to: {output_path}")
+
+    print("🌐 Building site...")
+    build_site()
+    print("✅ Site built → site/index.html")
 
 
 def main() -> None:

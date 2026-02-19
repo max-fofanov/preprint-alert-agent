@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agents Learn to Think, Plan, and Debate: The Dawn of Strategic AI</title>
+    <style>
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #353740;
+    --text-secondary: #6e6e80;
+    --bg: #ffffff;
+    --bg-secondary: #f7f7f8;
+    --border: #e5e5e6;
+    --accent: #10a37f;
+    --link: #10a37f;
+}
+
+body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    margin-bottom: 48px;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-header a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Index page */
+.index-hero {
+    padding: 80px 0 48px;
+}
+
+.index-hero h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 44px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+}
+
+.index-hero p {
+    font-size: 19px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+}
+
+.report-item:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.report-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.report-item h2 a:hover {
+    color: var(--accent);
+}
+
+.report-excerpt {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Article page */
+.article-header {
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.article-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+}
+
+.article-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-body {
+    padding-bottom: 80px;
+}
+
+.article-body h2,
+.article-body h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.article-body h2 {
+    font-size: 30px;
+    line-height: 1.25;
+}
+
+.article-body h3 {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+}
+
+.article-body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.article-body strong {
+    font-weight: 600;
+}
+
+.article-body em {
+    font-style: italic;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin: 32px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body code {
+    font-family: 'Söhne Mono', 'Menlo', monospace;
+    font-size: 0.9em;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article-body ul,
+.article-body ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.article-body li {
+    margin-bottom: 8px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 40px 0 0;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-title">Preprint Alert</a>
+            <nav class="site-nav">
+                <a href="index.html">Archive</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="article-header">
+            <div class="article-date">January 29, 2026</div>
+            <h1>Agents Learn to Think, Plan, and Debate: The Dawn of Strategic AI</h1>
+        </div>
+        <div class="article-body">
+            <p>If you&rsquo;ve ever watched a master chess player, you don&rsquo;t just see them making moves—you witness a hidden symphony of calculation, prediction, and adaptation. Today&rsquo;s arXiv drop suggests AI is learning to play that same symphony, not just on chessboards, but across coding, medicine, and daily life. We&rsquo;re moving beyond models that simply predict the next token to agents that plan, debate, and even know when to admit &ldquo;I don&rsquo;t know.&rdquo;</p>
+<p>The most exciting thread weaving through today&rsquo;s papers is a shift from <strong>reactive execution to strategic agency</strong>. Forget agents that blindly follow scripts. The frontier is now populated by models that internalize planning, leverage memory with purpose, and reason through complex, multi-step problems—often teaching themselves how to do it better.</p>
+<h2>The Planner in the Machine</h2>
+<p>One of the clearest signals of this shift is the move to bake strategic oversight directly into smaller, more efficient models. Take <strong>PILOT: Planning via Internalized Latent Optimization Trajectories for Large Language Models</strong>. This clever work adds a tiny &ldquo;hyper-network&rdquo; to a standard LLM—a small module that, for each new query, synthesizes a custom &ldquo;guidance vector.&rdquo; This vector is injected into the model&rsquo;s layers, subtly steering its reasoning toward optimal paths. It’s like giving a compact car the navigation system of a Formula 1 pit crew. The result? Near-zero added latency, but a <strong>+8.9% boost on tough math benchmarks</strong>. This demonstrates that strategic planning doesn&rsquo;t require bulky external scaffolds; it can be a lightweight, internal capability.</p>
+<p>This theme of internalized strategy is echoed in <strong>SAPO: Self-Adaptive Process Optimization Makes Small Reasoners Stronger</strong>. SAPO tackles a classic RL problem: how do you provide step-by-step (process) supervision without the monstrous cost of verifying every single step? Its ingenious answer is inspired by cognitive science: focus on the <strong>first error</strong>. The framework trains a small model to identify where its reasoning chain first goes wrong, then uses the model&rsquo;s own &ldquo;second guess&rdquo; at that step to generate a training signal. It’s a self-correcting loop that closes the gap between a model&rsquo;s reasoning and its ability to verify that reasoning, making small models far stronger and more efficient.</p>
+<p>But what does &ldquo;strategy&rdquo; look like when an agent isn&rsquo;t just thinking, but <em>acting</em> over a long horizon? <strong>Spark: Strategic Policy-Aware Exploration via Dynamic Branching</strong> answers this by transforming exploration from a brute-force scramble into a calculated investment. Instead of sampling a flat set of random trajectories, Spark builds a <strong>search tree that branches dynamically</strong> only at critical decision points flagged by the agent&rsquo;s own reasoning. It allocates its computational budget where it matters most, leading to <strong>50% higher success rates with 3x fewer samples</strong> in embodied tasks. This is RL with a business plan.</p>
+<h2>From Monologues to Debates: The Wisdom of AI Crowds</h2>
+<p>If one planning agent is good, is a committee better? The classic technique of Multi-Agent Debate (MAD) has often underwhelmed—expensive compute for mediocre gains. Today, <strong>Demystifying Multi-Agent Debate: The Role of Confidence and Diversity</strong> cracks the code on why. The authors show that vanilla debate fails because it lacks two pillars of human deliberation: <strong>diversity of initial viewpoints</strong> and <strong>calibrated confidence</strong>.</p>
+<p>Their solution is elegant. First, they seed the debate not with random answers, but by selecting a maximally diverse set from a larger pool, ensuring the correct answer has a fighting chance from the start. Then, they use RL to train agents not just to argue, but to <strong>express and perceive numerical confidence</strong>. Agents learn to say &ldquo;I&rsquo;m 90% sure&rdquo; and to weigh others&rsquo; arguments by their claimed certainty. This creates a dynamic where correct, high-confidence positions naturally gain influence. It’s a fusion of game theory and psychology that finally makes the computational expense of debate pay off.</p>
+<h2>The Memory to Make It Matter</h2>
+<p>Strategy and debate are empty without context. For agents to be truly useful, they need to remember—not just facts, but preferences, past actions, and evolving situations. Several papers tackle this from fascinating angles.</p>
+<p><strong>BMAM: Brain-inspired Multi-Agent Memory Framework</strong> takes a page from neuroscience, decomposing memory into specialized, interacting subsystems mimicking the hippocampus and prefrontal cortex. It organizes events along <strong>per-entity timelines</strong>, allowing an agent to query &ldquo;what happened before Y?&rdquo; with precise temporal grounding. The result is resistance to &ldquo;soul erosion&rdquo;—the loss of consistency in long interactions—achieving <strong>72.9% personalized responses</strong> with almost no contradictions.</p>
+<p>Meanwhile, <strong>Mem2ActBench: A Benchmark for Evaluating Long-Term Memory Utilization</strong> exposes a critical gap. Most systems are tested on passive recall (&ldquo;what&rsquo;s my favorite airline?&rdquo;). This new benchmark tests <strong>active memory-driven action</strong>. It gives agents underspecified commands like &ldquo;book that flight,&rdquo; forcing them to recall a user&rsquo;s stored preferences to correctly ground the tool&rsquo;s parameters. The finding? Current systems are woefully inadequate, with even the best struggling on parameter grounding. It’s a vital reality check showing that remembering is not the same as effectively using memory to act.</p>
+<h2>The Tools of the Trade</h2>
+<p>Of course, agents act through tools. The frontier here is moving from simple, single API calls to adaptive, multi-step orchestration. <strong>AdaReasoner: Dynamic Tool Orchestration for Iterative Visual Reasoning</strong> stands out. It trains multimodal LLMs with a novel <strong>Tool-GRPO</strong> RL algorithm, teaching them not <em>how</em> to use specific tools, but the <em>meta-skill</em> of tool orchestration. The model learns to dynamically select, sequence, and even suppress tools based on the task flow, showing <strong>emergent adaptive behaviors</strong> and topping benchmarks.</p>
+<p>Similarly, <strong>PEARL: Plan Exploration and Adaptive Reinforcement Learning for Multihop Tool Use</strong> employs a brilliant two-stage decoupling. First, the agent proactively <strong>explores tools offline</strong> like a student in a lab, building a practical &ldquo;learned manual.&rdquo; Then, a dedicated Planner module is trained via RL with a planning-specific reward, optimizing for entire multi-step strategies before a single tool is called. This separation of planning from execution cleanly addresses error propagation, a classic weakness in long tool-use chains.</p>
+<h2>Knowing the Limits: The Humble Agent</h2>
+<p>Perhaps the most reassuring trend is the focus on reliability and calibration. <strong>Rewarding Intellectual Humility Learning When Not To Answer In Large Language Models</strong> explores a simple but profound idea: train LLMs to abstain. Using RL with a tunable &ldquo;abstention reward,&rdquo; they give models a knob to control their confidence threshold. The sweet spot—a small negative reward for saying &ldquo;I don&rsquo;t know&rdquo;—reduces wrong answers without massacring accuracy. It’s a pragmatic step toward more honest and deployable AI.</p>
+<p>This drive for reliability is also leading to more sophisticated evaluation. <strong>Beyond Accuracy: A Cognitive Load Framework for Mapping the Capability Boundaries of Tool-use Agents</strong> is a gem. It borrows Cognitive Load Theory to deconstruct <em>why</em> an agent fails. It breaks task difficulty into <strong>Intrinsic Load</strong> (the inherent complexity of the solution) and <strong>Extraneous Load</strong> (poor instructions or docs). Their parametric benchmark can independently dial these loads up and down, generating a &ldquo;cognitive profile&rdquo; for each agent. It moves evaluation from &ldquo;who&rsquo;s best?&rdquo; to &ldquo;what are their breaking points, and why?&rdquo;</p>
+<h2>The Big Picture: Reasoning in the Dark</h2>
+<p>Beneath these applied advances lies foundational work rethinking how models reason. <strong>Modeling Next-Token Prediction as Left-Nested Intuitionistic Implication</strong> is a mind-bender. It derives a neural architecture from first principles of logic, treating token generation as the step-by-step construction of a logical proof. Generating &ldquo;the cat sat&rdquo; becomes equivalent to proving <code>"sat" → ("cat" → "the")</code>. It’s a profound reframing that could bridge the gap between neural networks and formal verification.</p>
+<p>Efficiency is also getting a radical rethink. <strong>Reasoning in the Dark: Interleaved Vision-Text Reasoning in Latent Space</strong> does away with generating intermediate images or text during multimodal reasoning. Instead, the entire reasoning process happens in the model&rsquo;s <strong>latent space</strong>—hidden state updates and adaptive visual embeddings. This &ldquo;thinking in the dark&rdquo; leads to a <strong>&gt;5x speedup</strong> while improving accuracy, a huge leap for real-time applications.</p>
+<h2>The Takeaway: Strategy is the New Currency</h2>
+<p>The collective message from today&rsquo;s research is clear. The next leap in AI capability isn&rsquo;t just about more data or bigger models. It&rsquo;s about <strong>strategy</strong>—the learned ability to plan ahead, debate alternatives, wield memory with purpose, orchestrate tools adaptively, and recognize one&rsquo;s own limits.</p>
+<p>We&rsquo;re witnessing the emergence of AI that doesn&rsquo;t just answer, but <em>deliberates</em>. That doesn&rsquo;t just react, but <em>orchestrates</em>. The agentic future isn&rsquo;t a swarm of simple script-runners; it&rsquo;s a ecosystem of competent, strategic, and—crucially—more reliable partners. The chess game is on, and the models are finally learning to think several moves ahead.</p>
+<p><em>For those who want to dive deeper, links to the papers discussed are embedded throughout. The research frontier has never been more lively.</em></p>
+        </div>
+        <a href="index.html" class="back-link">&larr; All reports</a>
+    </main>
+    <footer>
+        <div class="container">Generated by Preprint Alert Agent</div>
+    </footer>
+</body>
+</html>

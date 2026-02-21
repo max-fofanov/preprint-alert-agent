@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 REPORTS_DIR = Path("reports")
 SITE_DIR = Path("site")
 
+GITHUB_URL = "https://github.com/max-fofanov/preprint-alert-agent"
+
 CSS = """
 *,
 *::before,
@@ -24,11 +26,23 @@ CSS = """
 :root {
     --text: #353740;
     --text-secondary: #6e6e80;
-    --bg: #ffffff;
-    --bg-secondary: #f7f7f8;
+    --bg: #fafaf9;
+    --bg-secondary: #f3f3f0;
     --border: #e5e5e6;
     --accent: #10a37f;
     --link: #10a37f;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #d1d5db;
+        --text-secondary: #9ca3af;
+        --bg: #111111;
+        --bg-secondary: #1a1a1a;
+        --border: #2a2a2a;
+        --accent: #34d399;
+        --link: #34d399;
+    }
 }
 
 body {
@@ -38,6 +52,13 @@ body {
     line-height: 1.8;
     font-size: 17px;
     -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
 }
 
 .site-header {
@@ -67,6 +88,11 @@ body {
     color: var(--text-secondary);
     text-decoration: none;
     font-size: 15px;
+    transition: color 0.15s;
+}
+
+.site-nav a:hover {
+    color: var(--accent);
 }
 
 .container {
@@ -76,23 +102,10 @@ body {
 }
 
 /* Index page */
-.index-hero {
-    padding: 80px 0 48px;
-}
-
-.index-hero h1 {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 44px;
-    font-weight: 400;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    margin-bottom: 16px;
-}
-
-.index-hero p {
-    font-size: 19px;
+.index-tagline {
     color: var(--text-secondary);
-    line-height: 1.6;
+    font-size: 16px;
+    padding-bottom: 32px;
 }
 
 .report-list {
@@ -102,11 +115,19 @@ body {
 
 .report-item {
     border-top: 1px solid var(--border);
-    padding: 32px 0;
+    padding: 28px 0;
+    transition: background 0.15s;
 }
 
 .report-item:last-child {
     border-bottom: 1px solid var(--border);
+}
+
+.report-item:hover {
+    background: var(--bg-secondary);
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
 }
 
 .report-date {
@@ -114,7 +135,20 @@ body {
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+}
+
+.report-badge {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
+    letter-spacing: 0;
+    text-transform: none;
+    vertical-align: middle;
 }
 
 .report-item h2 {
@@ -129,6 +163,7 @@ body {
 .report-item h2 a {
     color: var(--text);
     text-decoration: none;
+    transition: color 0.15s;
 }
 
 .report-item h2 a:hover {
@@ -139,6 +174,23 @@ body {
     color: var(--text-secondary);
     font-size: 16px;
     line-height: 1.6;
+}
+
+/* Empty report (no interesting papers) */
+.report-item-empty {
+    opacity: 0.55;
+}
+
+.report-item-empty:hover {
+    background: transparent;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.report-item-empty h2 {
+    font-size: 18px;
+    font-family: inherit;
 }
 
 /* Article page */
@@ -195,6 +247,7 @@ body {
     text-decoration: underline;
     text-underline-offset: 2px;
     text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.15s;
 }
 
 .article-body a:hover {
@@ -241,6 +294,7 @@ body {
     text-decoration: none;
     font-size: 15px;
     padding: 40px 0 0;
+    transition: color 0.15s;
 }
 
 .back-link:hover {
@@ -259,6 +313,7 @@ body {
     text-decoration: none;
     font-size: 15px;
     max-width: 45%;
+    transition: color 0.15s;
 }
 
 .article-nav a:hover {
@@ -278,7 +333,29 @@ footer {
     font-size: 14px;
     color: var(--text-secondary);
 }
+
+footer a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
 """
+
+
+FAVICON = (
+    '<link rel="icon" href="data:image/svg+xml,'
+    '%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E'
+    '%3Ctext%20y=%22.9em%22%20font-size=%2290%22%3E'
+    "%F0%9F%93%84"  # U+1F4C4 page facing up emoji
+    "%3C/text%3E%3C/svg%3E"
+    '">'
+)
 
 
 def _page_shell(title: str, body: str, description: str = "") -> str:
@@ -296,6 +373,7 @@ def _page_shell(title: str, body: str, description: str = "") -> str:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>{og_tags}
+    {FAVICON}
     <style>{CSS}</style>
 </head>
 <body>
@@ -303,13 +381,13 @@ def _page_shell(title: str, body: str, description: str = "") -> str:
         <div class="container">
             <a href="index.html" class="site-title">Preprint Alert</a>
             <nav class="site-nav">
-                <a href="index.html">Archive</a>
+                <a href="{GITHUB_URL}">GitHub</a>
             </nav>
         </div>
     </header>
     {body}
     <footer>
-        <div class="container">Generated by Preprint Alert Agent</div>
+        <div class="container">Built with <a href="{GITHUB_URL}">Preprint Alert Agent</a></div>
     </footer>
 </body>
 </html>"""
@@ -354,6 +432,12 @@ def _parse_report(path: Path) -> dict:
     # Convert markdown to HTML
     html_content = markdown.markdown(text, extensions=["extra", "smarty"])
 
+    # Count arXiv paper links
+    paper_count = len(re.findall(r"arxiv\.org/abs/", text))
+
+    # Detect "no papers" reports
+    is_empty = "no interesting papers" in title.lower()
+
     return {
         "date_str": date_str,
         "date_display": date_display,
@@ -361,6 +445,8 @@ def _parse_report(path: Path) -> dict:
         "excerpt": excerpt,
         "html": html_content,
         "slug": path.stem,
+        "paper_count": paper_count,
+        "is_empty": is_empty,
     }
 
 
@@ -416,19 +502,28 @@ def build_site(reports_dir: Path = REPORTS_DIR, site_dir: Path = SITE_DIR) -> No
     # Build index page
     items_html = ""
     for report in reports:
-        items_html += f"""
-        <li class="report-item">
+        if report["is_empty"]:
+            items_html += f"""
+        <li class="report-item report-item-empty">
             <div class="report-date">{report["date_display"]}</div>
+            <h2>No interesting papers today</h2>
+        </li>"""
+        else:
+            badge = ""
+            if report["paper_count"]:
+                n = report["paper_count"]
+                label = f"{n} paper{'s' if n != 1 else ''}"
+                badge = f'<span class="report-badge">{label}</span>'
+            items_html += f"""
+        <li class="report-item">
+            <div class="report-date">{report["date_display"]}{badge}</div>
             <h2><a href="{report["slug"]}.html">{report["title"]}</a></h2>
             <p class="report-excerpt">{report["excerpt"]}</p>
         </li>"""
 
     index_body = f"""
     <main class="container">
-        <div class="index-hero">
-            <h1>Preprint Alert</h1>
-            <p>AI-curated highlights from today's arXiv papers</p>
-        </div>
+        <p class="index-tagline">AI-curated daily highlights from arXiv cs.CL</p>
         <ul class="report-list">
             {items_html}
         </ul>

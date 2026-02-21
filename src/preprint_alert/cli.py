@@ -2,11 +2,15 @@
 
 import argparse
 import asyncio
+import logging
+import sys
 from datetime import datetime
 from pathlib import Path
 
 from .agents import run_agent
 from .site_builder import build_site
+
+logger = logging.getLogger(__name__)
 
 
 def get_report_path() -> Path:
@@ -20,7 +24,7 @@ def get_report_path() -> Path:
 
 async def async_main(output_path: Path | None = None) -> None:
     """Run the agent and save the report."""
-    print("🚀 Starting Preprint Alert Agent\n")
+    logger.info("Starting Preprint Alert Agent")
 
     report = await run_agent()
 
@@ -28,11 +32,11 @@ async def async_main(output_path: Path | None = None) -> None:
         output_path = get_report_path()
 
     output_path.write_text(report)
-    print(f"\n✅ Report saved to: {output_path}")
+    logger.info("Report saved to: %s", output_path)
 
-    print("🌐 Building site...")
+    logger.info("Building site...")
     build_site()
-    print("✅ Site built → site/index.html")
+    logger.info("Site built → site/index.html")
 
 
 def main() -> None:
@@ -46,10 +50,27 @@ def main() -> None:
         type=Path,
         help="Output path for the report (default: reports/report-YYYY-MM-DD.md)",
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Enable debug output",
+    )
 
     args = parser.parse_args()
 
-    asyncio.run(async_main(args.output))
+    level = logging.DEBUG if args.verbose else logging.INFO
+    logging.basicConfig(
+        level=level,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        datefmt="%H:%M:%S",
+    )
+
+    try:
+        asyncio.run(async_main(args.output))
+    except Exception:
+        logger.exception("Agent failed")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

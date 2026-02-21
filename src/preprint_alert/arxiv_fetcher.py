@@ -1,9 +1,12 @@
 """Fetch papers from arXiv RSS feed."""
 
+import logging
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 
 import httpx
+
+logger = logging.getLogger(__name__)
 
 ARXIV_RSS_URL = "https://rss.arxiv.org/rss/cs.CL"
 
@@ -50,9 +53,13 @@ def clean_text(text: str | None) -> str:
 
 async def fetch_papers() -> list[Paper]:
     """Fetch today's papers from arXiv cs.CL RSS feed."""
-    async with httpx.AsyncClient() as client:
-        response = await client.get(ARXIV_RSS_URL, timeout=30.0)
-        response.raise_for_status()
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(ARXIV_RSS_URL, timeout=30.0)
+            response.raise_for_status()
+    except httpx.HTTPError as e:
+        logger.warning("Error fetching arXiv RSS feed: %s", e)
+        return []
 
     root = ET.fromstring(response.text)
     papers = []

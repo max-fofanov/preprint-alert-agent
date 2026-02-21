@@ -1,15 +1,17 @@
 """LangGraph agents for paper analysis."""
 
 import asyncio
+import logging
 from dataclasses import dataclass
-from typing import Annotated
 
-from langgraph.graph import StateGraph, END
 from langchain_core.messages import HumanMessage, SystemMessage
+from langgraph.graph import END, StateGraph
 
 from .arxiv_fetcher import Paper, fetch_papers
 from .config import RESEARCH_INTERESTS, get_llm
 from .html_fetcher import extract_methodology_section, fetch_paper_html
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -42,20 +44,25 @@ def make_initial_state() -> AgentState:
 
 
 # Coordinator Agent - picks interesting papers
-COORDINATOR_PROMPT = f"""You are a research paper curator. Your job is to review paper titles and abstracts from arXiv and identify which ones are genuinely interesting and worth reading in detail.
-
-{RESEARCH_INTERESTS}
-
-Given a list of papers with their titles and abstracts, return ONLY the arXiv IDs of papers that look interesting, one per line. Be selective - only pick papers that seem to have novel ideas or methods.
-
-Do not include any other text, just the arXiv IDs of interesting papers, one per line."""
+COORDINATOR_PROMPT = (
+    "You are a research paper curator. Your job is to review paper "
+    "titles and abstracts from arXiv and identify which ones are "
+    "genuinely interesting and worth reading in detail.\n\n"
+    f"{RESEARCH_INTERESTS}\n\n"
+    "Given a list of papers with their titles and abstracts, return "
+    "ONLY the arXiv IDs of papers that look interesting, one per line. "
+    "Be selective - only pick papers that seem to have novel ideas "
+    "or methods.\n\n"
+    "Do not include any other text, just the arXiv IDs of interesting "
+    "papers, one per line."
+)
 
 
 async def coordinator_node(state: AgentState) -> AgentState:
     """Coordinator agent that picks interesting papers."""
-    print("📋 Fetching papers from arXiv...")
+    logger.info("Fetching papers from arXiv...")
     papers = await fetch_papers()
-    print(f"   Found {len(papers)} papers")
+    logger.info("Found %d papers", len(papers))
 
     if not papers:
         state["papers"] = []
@@ -71,12 +78,17 @@ async def coordinator_node(state: AgentState) -> AgentState:
     )
 
     llm = get_llm()
-    print("🤔 Analyzing which papers look interesting...")
+    logger.info("Analyzing which papers look interesting...")
 
-    response = await llm.ainvoke([
-        SystemMessage(content=COORDINATOR_PROMPT),
-        HumanMessage(content=f"Here are today's papers:\n\n{papers_text}"),
-    ])
+    try:
+        response = await llm.ainvoke([
+            SystemMessage(content=COORDINATOR_PROMPT),
+            HumanMessage(content=f"Here are today's papers:\n\n{papers_text}"),
+        ])
+    except Exception as e:
+        logger.warning("LLM error in coordinator: %s", e)
+        state["interesting_paper_ids"] = []
+        return state
 
     # Parse response - expect arXiv IDs, one per line
     interesting_ids = [
@@ -89,48 +101,68 @@ async def coordinator_node(state: AgentState) -> AgentState:
     valid_ids = {p.arxiv_id for p in papers}
     interesting_ids = [id for id in interesting_ids if id in valid_ids]
 
-    print(f"   Selected {len(interesting_ids)} interesting papers")
+    logger.info("Selected %d interesting papers", len(interesting_ids))
     state["interesting_paper_ids"] = interesting_ids
     return state
 
 
 # Paper Analyst Agent - analyzes individual papers
-ANALYST_PROMPT = """You are a research paper analyst. Your job is to read a paper's full content and extract the key insights about its methodology and contributions.
-
-Focus on:
-1. What is the core methodological innovation?
-2. What makes this approach different from prior work?
-3. What are the key technical details that make this work?
-4. What are the main results and why do they matter?
-
-Be concise but insightful. Focus on the "cool" technical details that a researcher would want to know."""
+ANALYST_PROMPT = (
+    "You are a research paper analyst. Your job is to read a paper's "
+    "full content and extract the key insights about its methodology "
+    "and contributions.\n\n"
+    "Focus on:\n"
+    "1. What is the core methodological innovation?\n"
+    "2. What makes this approach different from prior work?\n"
+    "3. What are the key technical details that make this work?\n"
+    "4. What are the main results and why do they matter?\n\n"
+    'Be concise but insightful. Focus on the "cool" technical '
+    "details that a researcher would want to know."
+)
 
 
 async def analyze_single_paper(paper: Paper) -> PaperAnalysis:
     """Analyze a single paper in detail."""
-    print(f"   📖 Analyzing: {paper.title[:60]}...")
+    logger.info("Analyzing: %s...", paper.title[:60])
 
     # Fetch full HTML content
     html_content = await fetch_paper_html(paper)
 
     if html_content:
         methodology = extract_methodology_section(html_content)
-        content_for_analysis = f"Title: {paper.title}\n\nAbstract: {paper.abstract}\n\nMethodology section:\n{methodology[:10000]}"
+        content_for_analysis = (
+            f"Title: {paper.title}\n\n"
+            f"Abstract: {paper.abstract}\n\n"
+            f"Methodology section:\n{methodology[:10000]}"
+        )
     else:
         # Fall back to just abstract if HTML not available
-        content_for_analysis = f"Title: {paper.title}\n\nAbstract: {paper.abstract}\n\n(Full HTML not available for this paper)"
+        content_for_analysis = (
+            f"Title: {paper.title}\n\n"
+            f"Abstract: {paper.abstract}\n\n"
+            "(Full HTML not available for this paper)"
+        )
 
     llm = get_llm()
-    response = await llm.ainvoke([
-        SystemMessage(content=ANALYST_PROMPT),
-        HumanMessage(content=content_for_analysis),
-    ])
+    try:
+        response = await llm.ainvoke([
+            SystemMessage(content=ANALYST_PROMPT),
+            HumanMessage(content=content_for_analysis),
+        ])
+    except Exception as e:
+        logger.warning("LLM error analyzing %s: %s", paper.title[:40], e)
+        return PaperAnalysis(
+            paper=paper,
+            summary="Analysis unavailable due to an error.",
+            methodology_insights="Analysis could not be completed.",
+            why_interesting="",
+        )
 
     return PaperAnalysis(
         paper=paper,
         summary=response.content[:500],
         methodology_insights=response.content,
-        why_interesting="",  # Will be filled by report writer context
+        why_interesting="",
     )
 
 
@@ -144,32 +176,49 @@ async def analyst_node(state: AgentState) -> AgentState:
         state["analyses"] = []
         return state
 
-    print(f"🔬 Analyzing {len(papers_to_analyze)} papers in detail...")
+    logger.info("Analyzing %d papers in detail...", len(papers_to_analyze))
 
-    # Run analyses in parallel
-    analyses = await asyncio.gather(*[analyze_single_paper(p) for p in papers_to_analyze])
+    # Run analyses in parallel, tolerating individual failures
+    results = await asyncio.gather(
+        *[analyze_single_paper(p) for p in papers_to_analyze],
+        return_exceptions=True,
+    )
+    analyses = [r for r in results if isinstance(r, PaperAnalysis)]
+    failed = [r for r in results if isinstance(r, BaseException)]
+    if failed:
+        logger.warning("%d paper(s) failed analysis", len(failed))
+        for err in failed:
+            logger.warning("  %s", err)
 
-    state["analyses"] = list(analyses)
+    state["analyses"] = analyses
     return state
 
 
 # Report Writer Agent - synthesizes into article
-REPORT_WRITER_PROMPT = f"""You are a science journalist writing an engaging article about today's interesting papers from arXiv's NLP section.
-
-{RESEARCH_INTERESTS}
-
-Write a compelling, free-form article that:
-1. Opens with a hook about today's most exciting developments
-2. Weaves together the papers into a narrative - don't just list them
-3. Highlights the coolest methodological insights
-4. Explains why these advances matter
-
-CRITICAL: Every time you mention a paper, you MUST include a markdown link to it. Use the exact URLs provided.
-Format: [Paper Title](url) - e.g., [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
-
-Write in an engaging, accessible style - like a blog post from a researcher who's excited about what they found. Avoid dry academic language.
-
-Do NOT use bullet points or numbered lists. Write flowing prose with natural transitions between topics."""
+REPORT_WRITER_PROMPT = (
+    "You are a science journalist writing an engaging article about "
+    "today's interesting papers from arXiv's NLP section.\n\n"
+    f"{RESEARCH_INTERESTS}\n\n"
+    "Write a compelling, free-form article that:\n"
+    "1. Opens with a hook about today's most exciting developments\n"
+    "2. Weaves together the papers into a narrative - don't just "
+    "list them\n"
+    "3. Highlights the coolest methodological insights\n"
+    "4. Explains why these advances matter\n\n"
+    "CRITICAL: Every time you mention a paper, you MUST include a "
+    "markdown link to it. Use the exact URLs provided.\n"
+    "Format: [Paper Title](url) - e.g., "
+    "[Attention Is All You Need]"
+    "(https://arxiv.org/abs/1706.03762)\n\n"
+    "Write in an engaging, accessible style - like a blog post from "
+    "a researcher who's excited about what they found. "
+    "Avoid dry academic language.\n\n"
+    "Do NOT use bullet points or numbered lists. Write flowing prose "
+    "with natural transitions between topics.\n\n"
+    "Start your article DIRECTLY with a markdown # heading as the "
+    "title. Do NOT include any preamble or meta-commentary before "
+    "the title."
+)
 
 
 async def report_writer_node(state: AgentState) -> AgentState:
@@ -180,7 +229,7 @@ async def report_writer_node(state: AgentState) -> AgentState:
         state["final_report"] = "# No interesting papers found today\n\nCheck back tomorrow!"
         return state
 
-    print("✍️  Writing report...")
+    logger.info("Writing report...")
 
     # Format analyses for the report writer
     analyses_text = "\n\n---\n\n".join(
@@ -192,12 +241,23 @@ async def report_writer_node(state: AgentState) -> AgentState:
     )
 
     llm = get_llm()
-    response = await llm.ainvoke([
-        SystemMessage(content=REPORT_WRITER_PROMPT),
-        HumanMessage(content=f"Here are the papers I analyzed today:\n\n{analyses_text}"),
-    ])
-
-    state["final_report"] = response.content
+    try:
+        response = await llm.ainvoke([
+            SystemMessage(content=REPORT_WRITER_PROMPT),
+            HumanMessage(content=f"Here are the papers I analyzed today:\n\n{analyses_text}"),
+        ])
+        state["final_report"] = response.content
+    except Exception as e:
+        logger.warning("LLM error in report writer: %s", e)
+        paper_list = "\n".join(
+            f"- [{a.paper.title}]({a.paper.link})" for a in analyses
+        )
+        state["final_report"] = (
+            "# Today's Papers\n\n"
+            "Automatic report generation encountered an error. "
+            "Here are the papers that were identified as interesting:\n\n"
+            f"{paper_list}"
+        )
     return state
 
 

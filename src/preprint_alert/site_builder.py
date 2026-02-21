@@ -1,10 +1,13 @@
 """Build a static site from markdown reports."""
 
+import logging
 import re
 from datetime import datetime
 from pathlib import Path
 
 import markdown
+
+logger = logging.getLogger(__name__)
 
 REPORTS_DIR = Path("reports")
 SITE_DIR = Path("site")
@@ -244,6 +247,29 @@ body {
     color: var(--accent);
 }
 
+.article-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0 0;
+    gap: 24px;
+}
+
+.article-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    max-width: 45%;
+}
+
+.article-nav a:hover {
+    color: var(--accent);
+}
+
+.nav-newer {
+    margin-left: auto;
+    text-align: right;
+}
+
 footer {
     border-top: 1px solid var(--border);
     padding: 32px 0;
@@ -255,14 +281,21 @@ footer {
 """
 
 
-def _page_shell(title: str, body: str) -> str:
+def _page_shell(title: str, body: str, description: str = "") -> str:
     """Wrap content in the HTML shell with head, styles, header, footer."""
+    og_tags = ""
+    if description:
+        og_tags = (
+            f'\n    <meta property="og:title" content="{title}">'
+            f'\n    <meta property="og:description" content="{description[:200]}">'
+            '\n    <meta property="og:type" content="article">'
+        )
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title}</title>
+    <title>{title}</title>{og_tags}
     <style>{CSS}</style>
 </head>
 <body>
@@ -295,16 +328,24 @@ def _parse_report(path: Path) -> dict:
     except ValueError:
         date_display = date_str
 
-    # Extract title from first heading
-    title_match = re.match(r"^#+\s+(.+)$", text, re.MULTILINE)
+    # Extract title from first markdown heading, or bold text as fallback
+    title_match = re.search(r"^#+\s+(.+)$", text, re.MULTILINE)
+    if not title_match:
+        title_match = re.search(r"^\*\*(.+?)\*\*$", text, re.MULTILINE)
     title = title_match.group(1) if title_match else f"Report {date_str}"
 
-    # Get first paragraph as excerpt
+    # Get first paragraph as excerpt, skipping headings and LLM preamble
     lines = text.split("\n")
     excerpt = ""
     for line in lines:
         stripped = line.strip()
-        if stripped and not stripped.startswith("#"):
+        if (
+            stripped
+            and not stripped.startswith("#")
+            and not stripped.startswith("**")
+            and not stripped.lower().startswith("here's my")
+            and not stripped.lower().startswith("here is my")
+        ):
             excerpt = stripped[:200]
             if len(stripped) > 200:
                 excerpt += "..."
@@ -332,13 +373,29 @@ def build_site(reports_dir: Path = REPORTS_DIR, site_dir: Path = SITE_DIR) -> No
     reports = [_parse_report(f) for f in report_files]
 
     if not reports:
-        print("   No reports found to build site from.")
+        logger.warning("No reports found to build site from.")
         return
 
-    # Build individual report pages
-    for report in reports:
+    # Build individual report pages (reports sorted newest-first)
+    for i, report in enumerate(reports):
         # Strip the first h1/h2/h3 from body since we show it in the header
         body_html = re.sub(r"^<h[123][^>]*>.*?</h[123]>", "", report["html"], count=1).strip()
+
+        # Build prev/next navigation
+        nav_html = '<div class="article-nav">'
+        if i < len(reports) - 1:  # older report exists
+            older = reports[i + 1]
+            nav_html += (
+                f'<a class="nav-older" href="{older["slug"]}.html">'
+                f'&larr; {older["title"][:50]}</a>'
+            )
+        if i > 0:  # newer report exists
+            newer = reports[i - 1]
+            nav_html += (
+                f'<a class="nav-newer" href="{newer["slug"]}.html">'
+                f'{newer["title"][:50]} &rarr;</a>'
+            )
+        nav_html += "</div>"
 
         article = f"""
     <main class="container">
@@ -350,9 +407,10 @@ def build_site(reports_dir: Path = REPORTS_DIR, site_dir: Path = SITE_DIR) -> No
             {body_html}
         </div>
         <a href="index.html" class="back-link">&larr; All reports</a>
+        {nav_html}
     </main>"""
 
-        page = _page_shell(report["title"], article)
+        page = _page_shell(report["title"], article, description=report["excerpt"])
         (site_dir / f"{report['slug']}.html").write_text(page)
 
     # Build index page
@@ -379,4 +437,4 @@ def build_site(reports_dir: Path = REPORTS_DIR, site_dir: Path = SITE_DIR) -> No
     index_page = _page_shell("Preprint Alert", index_body)
     (site_dir / "index.html").write_text(index_page)
 
-    print(f"   Built {len(reports)} report pages + index → {site_dir}/")
+    logger.info("Built %d report pages + index → %s/", len(reports), site_dir)

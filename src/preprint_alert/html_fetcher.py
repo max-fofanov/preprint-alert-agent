@@ -1,5 +1,7 @@
 """Fetch and parse HTML content from arXiv papers."""
 
+import re
+
 import httpx
 from bs4 import BeautifulSoup
 
@@ -58,28 +60,30 @@ def extract_methodology_section(html_content: str) -> str:
     """
     Try to extract methodology/methods section from paper content.
 
+    Looks for section headings (start of line, optionally numbered) rather than
+    arbitrary substring matches to avoid false positives from mid-sentence mentions.
+
     Returns the full content if no specific methodology section is found.
     """
-    content_lower = html_content.lower()
-
-    # Common methodology section headers
+    # Common methodology section headers, ordered by specificity
     method_markers = [
         "methodology",
+        "proposed method",
+        "our approach",
         "methods",
         "method",
         "approach",
-        "our approach",
-        "proposed method",
-        "model",
         "architecture",
+        "model",
     ]
 
-    # Try to find methodology section
     for marker in method_markers:
-        idx = content_lower.find(marker)
-        if idx != -1:
-            # Return from this point, but limit to reasonable length
-            return html_content[idx : idx + 15000]
+        # Match marker at start of a line, optionally preceded by a section number
+        pattern = rf"(?:^|\n)\s*(?:\d+\.?\s+)?{re.escape(marker)}\b"
+        match = re.search(pattern, html_content, re.IGNORECASE)
+        if match:
+            start = match.start()
+            return html_content[start : start + 15000]
 
     # If no methodology section found, return truncated content
     return html_content[:20000]

@@ -2,7 +2,7 @@
 
 import pytest
 
-from preprint_alert.arxiv_fetcher import parse_arxiv_id, clean_text
+from preprint_alert.arxiv_fetcher import clean_text, parse_arxiv_id
 
 
 def test_parse_arxiv_id():
@@ -35,4 +35,4 @@ async def test_fetch_papers_integration():
         assert paper.arxiv_id
         assert paper.title
         assert paper.link
-        assert paper.html_url.startswith("https://arxiv.org/html/")
+        assert paper.html_url.startswith("https://export.arxiv.org/html/")

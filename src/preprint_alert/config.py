@@ -15,7 +15,7 @@ def get_llm() -> ChatOpenAI:
     if not api_key:
         raise ValueError("OPENROUTER_API_KEY environment variable is required")
 
-    model = os.getenv("OPENROUTER_MODEL", "anthropic/claude-3.5-sonnet")
+    model = os.getenv("OPENROUTER_MODEL", "deepseek/deepseek-v3.2")
 
     return ChatOpenAI(
         model=model,

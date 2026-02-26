@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beyond Imitation: LLMs Are Learning to Think, Plan, and Remember</title>
+    <meta property="og:title" content="Beyond Imitation: LLMs Are Learning to Think, Plan, and Remember">
+    <meta property="og:description" content="If you've been tracking the recent leaps in language models, you've likely noticed a subtle but profound shift. The conversation is moving beyond mere generation—beyond writing fluent text, answering ">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%22.9em%22%20font-size=%2290%22%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E">
+    <style>
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #353740;
+    --text-secondary: #6e6e80;
+    --bg: #fafaf9;
+    --bg-secondary: #f3f3f0;
+    --border: #e5e5e6;
+    --accent: #10a37f;
+    --link: #10a37f;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #d1d5db;
+        --text-secondary: #9ca3af;
+        --bg: #111111;
+        --bg-secondary: #1a1a1a;
+        --border: #2a2a2a;
+        --accent: #34d399;
+        --link: #34d399;
+    }
+}
+
+body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    margin-bottom: 48px;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-header a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.15s;
+}
+
+.site-nav a:hover {
+    color: var(--accent);
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Index page */
+.index-tagline {
+    color: var(--text-secondary);
+    font-size: 16px;
+    padding-bottom: 32px;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    transition: background 0.15s;
+}
+
+.report-item:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.report-item:hover {
+    background: var(--bg-secondary);
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.report-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.report-badge {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
+    letter-spacing: 0;
+    text-transform: none;
+    vertical-align: middle;
+}
+
+.report-item h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.report-item h2 a:hover {
+    color: var(--accent);
+}
+
+.report-excerpt {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Empty report (no interesting papers) */
+.report-item-empty {
+    opacity: 0.55;
+}
+
+.report-item-empty:hover {
+    background: transparent;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.report-item-empty h2 {
+    font-size: 18px;
+    font-family: inherit;
+}
+
+/* Article page */
+.article-header {
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.article-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+}
+
+.article-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-body {
+    padding-bottom: 80px;
+}
+
+.article-body h2,
+.article-body h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.article-body h2 {
+    font-size: 30px;
+    line-height: 1.25;
+}
+
+.article-body h3 {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.15s;
+}
+
+.article-body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.article-body strong {
+    font-weight: 600;
+}
+
+.article-body em {
+    font-style: italic;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin: 32px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body code {
+    font-family: 'Söhne Mono', 'Menlo', monospace;
+    font-size: 0.9em;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article-body ul,
+.article-body ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.article-body li {
+    margin-bottom: 8px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 40px 0 0;
+    transition: color 0.15s;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.article-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0 0;
+    gap: 24px;
+}
+
+.article-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    max-width: 45%;
+    transition: color 0.15s;
+}
+
+.article-nav a:hover {
+    color: var(--accent);
+}
+
+.nav-newer {
+    margin-left: auto;
+    text-align: right;
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+footer a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-title">Preprint Alert</a>
+            <nav class="site-nav">
+                <a href="https://github.com/max-fofanov/preprint-alert-agent">GitHub</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="article-header">
+            <div class="article-date">February 26, 2026</div>
+            <h1>Beyond Imitation: LLMs Are Learning to Think, Plan, and Remember</h1>
+        </div>
+        <div class="article-body">
+            <p>If you&rsquo;ve been tracking the recent leaps in language models, you&rsquo;ve likely noticed a subtle but profound shift. The conversation is moving beyond mere generation—beyond writing fluent text, answering questions, or summarizing documents. The frontier now is <em>reasoning</em>. Today&rsquo;s papers paint a vivid picture of that frontier, revealing a field in the midst of a quiet revolution. We’re not just teaching models to talk; we’re teaching them to think, plan, and remember in ways that feel startlingly human and, at times, profoundly alien.</p>
+<p>The core challenge? Reasoning isn&rsquo;t a single skill. It&rsquo;s a tapestry of processes: holding a complex plan in mind, navigating uncertainty, accessing internal knowledge, and even understanding how others think. Today’s research attacks this problem from every angle, offering glimpses into a future where AI doesn&rsquo;t just parrot information but truly understands and acts upon it.</p>
+<h3>Teaching Precision Through Structure</h3>
+<p>Consider the challenge of getting a model to follow a complex instruction with hidden constraints. The <a href="https://arxiv.org/abs/2602.21228">ImpRIF</a> paper tackles this head-on by formalizing &ldquo;implicit reasoning&rdquo; as a verifiable graph. Imagine an instruction like: &ldquo;Plan a week of meals for a busy family, ensuring variety and that leftovers from Tuesday can be used on Thursday.&rdquo; The constraints—nutritional balance, time, ingredient reuse—aren&rsquo;t spelled out. ImpRIF decomposes this into a graph of atomic actions and dependencies. During training, the model learns to traverse this &ldquo;ERG Thinking Pattern,&rdquo; a structured reasoning chain that ensures every hidden condition is checked before proceeding. The result is a model that doesn&rsquo;t just guess; it reasons, step-by-verifiable-step. This approach shifts instruction-following from a black art of prompt engineering to a disciplined, graph-driven process, a necessary step for building reliable AI assistants.</p>
+<p>But reasoning isn&rsquo;t just about following instructions; it&rsquo;s also about navigating uncertainty. This is where <a href="https://arxiv.org/abs/2602.21215">Sparse Inference-time Alignment (SIA)</a> offers a brilliantly simple yet powerful insight. Instead of constantly steering the model&rsquo;s every output—a computationally expensive and often counterproductive process—SIA only intervenes at critical &ldquo;junctions.&rdquo; How does it know when to intervene? By watching the model&rsquo;s own uncertainty. When the model hesitates, its next-token distribution entropy spikes. That&rsquo;s the moment to gently guide it. By steering sparsely—only 20-80% of tokens—SIA achieves better alignment with far less compute, proving that sometimes, the best way to guide is to know when to let go.</p>
+<h3>The Architectures of Thought</h3>
+<p>If reasoning is the process, then memory is its canvas. Traditional AI memory is often a clunky vector database: static, isolated entries. The <a href="https://arxiv.org/abs/2602.21220">Field-Theoretic Memory for AI Agents</a> paper proposes something far more elegant: a continuous, dynamic field. Imagine memories not as discrete points but as a heat map on a semantic landscape. Frequently accessed memories glow brightly and resist fading. Related ideas diffuse into neighboring regions, enabling associative recall. Unused memories gently decay. This physics-inspired approach isn&rsquo;t just poetic; it&rsquo;s strikingly effective. On tasks requiring recall over hundreds of conversational turns, it crushed traditional methods, improving multi-session reasoning by a staggering 116%. It suggests that for AI to reason fluidly over long contexts, its memory must be as dynamic and interconnected as the thoughts it supports.</p>
+<p>Meanwhile, <a href="https://arxiv.org/abs/2602.02007">xMemory</a> tackles a more practical but equally critical memory problem: how an agent should remember its own past conversations. Standard retrieval-augmented generation (RAG) fails here because dialogue is a coherent stream, not a set of independent documents. Near-identical messages create redundancy, while pruning risks breaking crucial narrative chains. xMemory&rsquo;s solution is hierarchical and adaptive. It disentangles conversations into reusable facts, episodic traces, and overarching themes, organizing them with a &ldquo;sparsity–semantics&rdquo; objective that balances compactness with coherence. When the agent needs to recall something, it doesn&rsquo;t just fetch the top-k similar snippets; it navigates this structured graph, first grabbing high-level themes and only drilling down to raw dialogue when necessary. This turns a chaotic chat log into an organized, query-efficient knowledge base, a foundational upgrade for any persistent AI companion.</p>
+<h3>The Inner Workings: Confidence, Language, and Self-Knowledge</h3>
+<p>Peeling back another layer, we find papers probing <em>how</em> models think, not just what they produce. <a href="https://arxiv.org/abs/2602.21262">Under the Influence</a> uses a clever Sokoban puzzle environment to dissect two crucial capacities: persuasion and vigilance. They find these abilities are <em>dissociable</em>. A model can be highly persuasive as an advisor yet utterly gullible as a player, even when explicitly warned it might be deceived. This reveals a dangerous asymmetry: our most convincing AI assistants might also be the easiest to manipulate. It’s a stark reminder that building capable AI isn&rsquo;t enough; we must also build robust, self-aware AI.</p>
+<p>This leads to a fundamental question: Can an LLM truly know what it knows? <a href="https://arxiv.org/abs/2602.21947">Large Language Models are Algorithmically Blind</a> provides a sobering answer. The authors didn&rsquo;t ask models to <em>perform</em> algorithms but to <em>predict their behavior</em>—to forecast, for instance, the precision of a causal discovery algorithm on a given dataset. The result? &ldquo;Near-total failure.&rdquo; Models could recite facts about algorithms but couldn&rsquo;t simulate their execution to make calibrated predictions. This &ldquo;algorithmic blindness&rdquo; suggests a deep limitation: current LLMs possess vast declarative knowledge but lack a procedural, internal model of how that knowledge plays out in dynamic systems. For AI to be a reliable partner in science or engineering, this gap must be closed.</p>
+<p>Intriguingly, the path to better reasoning might not be in English. <a href="https://arxiv.org/abs/2602.21887">ExpLang</a> explores &ldquo;on-policy thinking language selection,&rdquo; allowing models to <em>choose</em> which language to reason in during reinforcement learning. Surprisingly, models often converged on non-English languages like Chinese or Spanish for certain problems, likely leveraging more concise reasoning or favorable tokenization. By making language choice a learned action, ExpLang turned multilingual capability from a passive trait into an active optimization lever, boosting both performance and, potentially, cognitive diversity.</p>
+<h3>The Practical Frontier: From Benchmarks to Builders</h3>
+<p>All this fundamental research is rapidly flowing into practical systems. The evaluation of these complex reasoning agents is itself a complex challenge. <a href="https://arxiv.org/abs/2602.21230">TRACE</a> argues convincingly that judging an AI research agent solely by its final answer is like judging a scientist only by their published paper—it misses the entire process. TRACE introduces a holistic, trajectory-centric assessment that quantifies an agent&rsquo;s exploration efficiency, reasoning robustness, and even its latent capability through a &ldquo;Minimum Hint Rate.&rdquo; This framework doesn&rsquo;t just rank agents; it diagnoses why one fails where another succeeds, providing a crucial tool for building better AI scientists.</p>
+<p>Indeed, building is the next step. <a href="https://arxiv.org/abs/2510.10472">FML-bench</a> is a new benchmark designed not to test optimization skills but <em>scientific research aptitude</em>. It tasks agents with tackling fundamental ML bottlenecks like generalization or fairness, requiring novel algorithm design. The key finding? Agents that employed <strong>broad exploration strategies</strong>—quantified by a novel &ldquo;Exploration Diversity&rdquo; metric—achieved superior final performance. The best AI researchers, it seems, aren&rsquo;t just efficient optimizers; they&rsquo;re curious, wide-ranging explorers.</p>
+<p>We see this principle of strategic exploration applied in <a href="https://arxiv.org/abs/2602.21728">Explore-on-Graph (EoG)</a> for knowledge graph reasoning. Instead of forcing an LLM to follow pre-defined paths, EoG uses reinforcement learning to <em>incentivize</em> the model to autonomously explore the graph, discovering novel reasoning chains. It provides a &ldquo;path-refined reward&rdquo; that gives dense, step-by-step feedback, teaching the model not just the destination but the skill of navigation itself. The result is an AI that doesn&rsquo;t just retrieve facts but learns to reason about their connections.</p>
+<h3>The Road Ahead: From Mimicry to Mastery</h3>
+<p>Today’s papers collectively signal a maturation of the field. We are moving beyond treating LLMs as monolithic text generators and beginning to engineer their cognitive architectures—their memory systems, their reasoning processes, their capacity for self-reflection and exploration. The work on <a href="https://arxiv.org/abs/2602.21786">D-COT</a>, which uses control tags to teach small models disciplined, efficient chain-of-thought, and <a href="https://arxiv.org/abs/2602.21492">GradAlign</a>, which curates an adaptive curriculum for RL based on gradient alignment, are further examples of this trend: actively shaping <em>how</em> the model learns, not just <em>what</em> it learns.</p>
+<p>The ultimate goal hinted at across these studies is an AI that doesn&rsquo;t just imitate human reasoning but develops its own robust, verifiable, and efficient processes for thinking. From the continuous fields of memory to the structured graphs of implicit reasoning, from the strategic selection of thinking language to the principled measurement of exploration, researchers are assembling a new toolkit. It&rsquo;s a toolkit not for building machines that talk, but for building machines that think. And as today&rsquo;s papers show, that journey is just getting started.</p>
+        </div>
+        <a href="index.html" class="back-link">&larr; All reports</a>
+        <div class="article-nav"><a class="nav-older" href="report-2026-02-25.html">&larr; The Inner Dialogues of AI: How Today's Papers Reve</a></div>
+    </main>
+    <footer>
+        <div class="container">Built with <a href="https://github.com/max-fofanov/preprint-alert-agent">Preprint Alert Agent</a></div>
+    </footer>
+</body>
+</html>

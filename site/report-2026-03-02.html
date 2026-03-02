@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Paradox of Thinking: How Today's LLM Research is Teaching Models to Be Better—And Worse—Thinkers</title>
+    <meta property="og:title" content="The Paradox of Thinking: How Today's LLM Research is Teaching Models to Be Better—And Worse—Thinkers">
+    <meta property="og:description" content="The most profound advances in AI often stem from a simple, counterintuitive question. Today's most exciting research asks one: **What if an LLM thinking out loud is both its greatest strength and its ">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%22.9em%22%20font-size=%2290%22%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E">
+    <style>
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #353740;
+    --text-secondary: #6e6e80;
+    --bg: #fafaf9;
+    --bg-secondary: #f3f3f0;
+    --border: #e5e5e6;
+    --accent: #10a37f;
+    --link: #10a37f;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #d1d5db;
+        --text-secondary: #9ca3af;
+        --bg: #111111;
+        --bg-secondary: #1a1a1a;
+        --border: #2a2a2a;
+        --accent: #34d399;
+        --link: #34d399;
+    }
+}
+
+body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    margin-bottom: 48px;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-header a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.15s;
+}
+
+.site-nav a:hover {
+    color: var(--accent);
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Index page */
+.index-tagline {
+    color: var(--text-secondary);
+    font-size: 16px;
+    padding-bottom: 32px;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    transition: background 0.15s;
+}
+
+.report-item:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.report-item:hover {
+    background: var(--bg-secondary);
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.report-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.report-badge {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
+    letter-spacing: 0;
+    text-transform: none;
+    vertical-align: middle;
+}
+
+.report-item h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.report-item h2 a:hover {
+    color: var(--accent);
+}
+
+.report-excerpt {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Empty report (no interesting papers) */
+.report-item-empty {
+    opacity: 0.55;
+}
+
+.report-item-empty:hover {
+    background: transparent;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.report-item-empty h2 {
+    font-size: 18px;
+    font-family: inherit;
+}
+
+/* Article page */
+.article-header {
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.article-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+}
+
+.article-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-body {
+    padding-bottom: 80px;
+}
+
+.article-body h2,
+.article-body h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.article-body h2 {
+    font-size: 30px;
+    line-height: 1.25;
+}
+
+.article-body h3 {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.15s;
+}
+
+.article-body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.article-body strong {
+    font-weight: 600;
+}
+
+.article-body em {
+    font-style: italic;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin: 32px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body code {
+    font-family: 'Söhne Mono', 'Menlo', monospace;
+    font-size: 0.9em;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article-body ul,
+.article-body ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.article-body li {
+    margin-bottom: 8px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 40px 0 0;
+    transition: color 0.15s;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.article-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0 0;
+    gap: 24px;
+}
+
+.article-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    max-width: 45%;
+    transition: color 0.15s;
+}
+
+.article-nav a:hover {
+    color: var(--accent);
+}
+
+.nav-newer {
+    margin-left: auto;
+    text-align: right;
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+footer a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-title">Preprint Alert</a>
+            <nav class="site-nav">
+                <a href="https://github.com/max-fofanov/preprint-alert-agent">GitHub</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="article-header">
+            <div class="article-date">March 02, 2026</div>
+            <h1>The Paradox of Thinking: How Today's LLM Research is Teaching Models to Be Better—And Worse—Thinkers</h1>
+        </div>
+        <div class="article-body">
+            <p>The most profound advances in AI often stem from a simple, counterintuitive question. Today&rsquo;s most exciting research asks one: <strong>What if an LLM thinking out loud is both its greatest strength and its most crippling weakness?</strong></p>
+<p>A suite of papers published today wrestles with this core tension. They explore how we can make models <em>think smarter</em>—more efficiently, more reliably, and with greater nuance—while simultaneously revealing how that very thinking can betray them, leading to overconfidence, inefficiency, and even vulnerability. The narrative emerging is that we are entering an era of <strong>conscious reasoning engineering</strong>, where the &ldquo;chain-of-thought&rdquo; is no longer a mysterious byproduct but a manipulable component we can design, control, audit, and, when necessary, silence.</p>
+<h2>Teaching Models to Think in Stages and Silence Themselves</h2>
+<p>Let&rsquo;s start with the architectures built to make thinking better. The standout idea is that monolithic, one-size-fits-all reasoning is inefficient. Instead, we should architect models to think in specialized, modular stages. <a href="https://arxiv.org/abs/2602.24142">CoME: Empowering Channel-of-Mobile-Experts with Informative Hybrid-Capabilities Reasoning</a> proposes exactly this. It redesigns the popular Mixture-of-Experts (MoE) architecture not around input tokens, but around the <strong>required output capability</strong> at each step of a mobile agent&rsquo;s reasoning chain—summarizing a screen, planning an action, executing it. By aligning each expert to a distinct reasoning stage and training them with a curriculum that values step-by-step informativeness, CoME creates agents that are more reliable and capable. It’s a holistic reimagining of the reasoning pipeline as a coordinated assembly line, not a single artisan’s workshop.</p>
+<p>But what if the model thinks <em>too much</em>? A pervasive issue in reasoning models is &ldquo;overthinking&rdquo;—generating long, meandering chains of thought that burn compute without adding value. <a href="https://arxiv.org/abs/2505.19862">REA-RL: Reflection-Aware Online Reinforcement Learning for Efficient Reasoning</a> tackles this head-on. It introduces a clever two-part system: a small, fast &ldquo;reflection model&rdquo; that acts as an internal critic, identifying and truncating redundant reasoning steps on the fly, and a novel <strong>&ldquo;reflection reward&rdquo;</strong> that penalizes the model if its final answer isn&rsquo;t grounded in its preceding thoughts. This doesn&rsquo;t just shorten outputs; it teaches the model the discipline of concise, purposeful reflection, cutting inference costs by over a third without harming accuracy.</p>
+<p>Perhaps the most direct attack on inefficient thinking comes from a surprisingly simple finding in <a href="https://arxiv.org/abs/2602.24287">Do LLMs Benefit From Their Own Words?</a>. The paper discovers that in multi-turn conversations, stripping away the model&rsquo;s <em>own prior responses</em> from the context often <strong>does not hurt performance—and can even improve it</strong>. This is a stunning indictment of the default &ldquo;keep all context&rdquo; design. The model&rsquo;s verbose past can act as &ldquo;context pollution,&rdquo; propagating errors or stylistic tics. By simply omitting it, we can get cheaper, sometimes <em>better</em> answers. The implication for real-world chatbots and coding assistants is immediate and profound.</p>
+<h2>The Dark Side of Transparent Reasoning</h2>
+<p>However, this drive for explicit, step-by-step reasoning creates a new problem: privacy. Every intermediate thought is a potential data leak. <a href="https://arxiv.org/abs/2602.24210">Controllable Reasoning Models Are Private Thinkers</a> offers a fascinating solution by turning the problem on its head. What if we could <em>instruct</em> the model on <em>how</em> to think, including what to reveal? The authors train models to follow instructions <em>about their reasoning traces</em>—specifying formatting, style, and even what information to suppress. Using a novel &ldquo;staged decoding&rdquo; technique that swaps adapters mid-generation, they show you can dramatically improve privacy (by up to 52 percentage points) by making the model&rsquo;s internal monologue instruction-aware. The thinking process becomes not just transparent, but <em>controllable</em>.</p>
+<p>This theme of control extends to model behavior more broadly. <a href="https://arxiv.org/abs/2511.05408">Steering Language Models with Weight Arithmetic</a> demonstrates a remarkably surgical method for post-training behavior editing. By taking the difference between the weight updates from two small fine-tunes—one that encourages a behavior (like sycophancy) and one that discourages it—they isolate a pure &ldquo;behavior direction&rdquo; in weight space. Adding or subtracting this vector from the base model&rsquo;s weights lets you dial the behavior up or down like a volume knob, with better out-of-distribution generalization than activation steering. It&rsquo;s a powerful tool for alignment and a potential early warning system for detecting misalignment during training.</p>
+<h2>Probing the Quality (and Quirks) of Thought</h2>
+<p>As we engineer better thinking, we also need better ways to evaluate it. Static benchmarks are increasingly inadequate, as they are quickly memorized and gamed. <a href="https://arxiv.org/abs/2602.23729">From Static Benchmarks to Dynamic Protocol: Agent-Centric Text Anomaly Detection for Evaluating LLM Reasoning</a> proposes a brilliant alternative: a <strong>self-scaling, adversarial benchmark</strong>. A &ldquo;Teacher&rdquo; agent generates text anomaly detection problems; an &ldquo;Orchestrator&rdquo; validates them; a &ldquo;Student&rdquo; tries to solve them. If the Student succeeds, the Teacher is prompted to create a harder variant. The test adapts in real-time, creating a live reasoning arena that exposes corner-case failures static datasets miss.</p>
+<p>Other work pushes us to evaluate not just correctness, but the <em>quality</em> of probabilistic judgment. <a href="https://arxiv.org/abs/2602.23546">Humans and LLMs Diverge on Probabilistic Inferences</a> introduces ProbCOPA, a dataset where models must output a likelihood score (0-100) for probabilistic statements, just like human annotators. The key finding? LLMs are <strong>overconfident</strong>. They avoid the murky middle ground of medium likelihoods, clustering predictions at the extremes. When humans are uncertain, models are often wrongly sure. This is a critical divergence, revealing that our models lack a nuanced, human-like understanding of uncertainty—a major flaw for real-world decision support.</p>
+<p>The very structure of thought is also under the microscope. <a href="https://arxiv.org/abs/2510.02524">Unraveling Syntax: How Language Models Learn Context-Free Grammars</a> provides a formal lens, proving that the loss for learning a grammar can be decomposed into a sum of losses from its hierarchical subcomponents. Empirically, they find small transformers learn these subgrammars <strong>in parallel</strong>, unlike children who master simple structures first. Yet, both small and large models persistently struggle with deeper recursion, pointing to a fundamental architectural challenge.</p>
+<h2>The New Frontier: Auditing and Intervening in Thought</h2>
+<p>Perhaps the most ambitious thread in today&rsquo;s research is the move from observing thought to dissecting and manipulating its underlying mechanisms. <a href="https://arxiv.org/abs/2601.04398">Interpreting Transformers Through Attention Head Intervention</a> makes the compelling case that the old paradigm of visualizing attention weights is insufficient—it shows correlation, not causation. The future is <strong>causal intervention</strong>: surgically altering specific components (like attention heads) and observing the effect. This shift from passive explainability to active mechanistic interpretability is crucial for building reliable, safe systems.</p>
+<p>A stunning application of this principle is found in <a href="https://arxiv.org/abs/2602.23547">France or Spain or Germany or France: A Neural Account of Non-Redundant Redundant Disjunctions</a>. Using activation patching, the authors show <em>how</em> a transformer decides that a repeated word like &ldquo;France&rdquo; in a sentence (&ldquo;a philosophy program in France or Spain, or a mathematics program in Germany or France&rdquo;) is not redundant. The model uses &ldquo;contextual binding&rdquo; to tag each instance differently and then selectively <strong>activates or suppresses</strong> its pattern-copying &ldquo;induction heads&rdquo; based on this context. It&rsquo;s a beautiful bridge between high-level linguistics and low-level neural circuitry.</p>
+<p>The ultimate form of intervention might be reversing changes altogether. <a href="https://arxiv.org/abs/2505.20819">Tracing and Reversing Edits in LLMs</a> introduces two powerful new capabilities for the age of model editing. First, <strong>tracing</strong>: given only the weight changes between an original and an edited model, their method can infer <em>what fact was edited</em> with near-perfect accuracy. Second, <strong>reversing</strong>: using a simple low-rank approximation of the edited weights, they can undo the edit, recovering the original model&rsquo;s behavior. This isn&rsquo;t just an academic exercise; it&rsquo;s a crucial tool for security, transparency, and accountability in a world where models can be secretly modified.</p>
+<h2>The Bigger Picture: Efficient, Controllable, and Auditable Thought</h2>
+<p>What ties today&rsquo;s diverse papers together is a maturation of our relationship with AI reasoning. We are no longer satisfied with black-box thinking that spits out answers. The frontier is about building models that:
+*   <strong>Think efficiently</strong> (<a href="https://arxiv.org/abs/2505.19862">REA-RL</a>, <a href="https://arxiv.org/abs/2602.24287">Do LLMs Benefit From Their Own Words?</a>), avoiding wasteful computation.
+*   <strong>Think in structured, reliable ways</strong> (<a href="https://arxiv.org/abs/2602.24142">CoME</a>, <a href="https://arxiv.org/abs/2510.25992">Supervised Reinforcement Learning: From Expert Trajectories to Step-wise Reasoning</a>).
+*   <strong>Think privately and controllably</strong> (<a href="https://arxiv.org/abs/2602.24210">Controllable Reasoning Models Are Private Thinkers</a>, <a href="https://arxiv.org/abs/2511.05408">Steering Language Models with Weight Arithmetic</a>).
+*   <strong>Have their thinking rigorously evaluated</strong> (<a href="https://arxiv.org/abs/2602.23729">From Static Benchmarks to Dynamic Protocol</a>, <a href="https://arxiv.org/abs/2505.24532">DeepQuestion: Systematic Generation of Real-World Challenges for Evaluating LLMs Performance</a>).
+*   <strong>Have their thinking processes understood and reversed</strong> (<a href="https://arxiv.org/abs/2601.04398">Interpreting Transformers Through Attention Head Intervention</a>, <a href="https://arxiv.org/abs/2505.20819">Tracing and Reversing Edits in LLMs</a>).</p>
+<p>We are moving from models that simply <em>can</em> reason to models whose reasoning we can <em>design, direct, and debug</em>. This is the essential next step for deploying powerful AI in high-stakes, real-world environments. The paradox is that to make them better thinkers, we must sometimes teach them to think less, to think differently, or to let us look directly under the hood. The papers released today provide the sophisticated tools we need to do just that.</p>
+        </div>
+        <a href="index.html" class="back-link">&larr; All reports</a>
+        <div class="article-nav"><a class="nav-older" href="report-2026-03-01.html">&larr; No interesting papers found today</a></div>
+    </main>
+    <footer>
+        <div class="container">Built with <a href="https://github.com/max-fofanov/preprint-alert-agent">Preprint Alert Agent</a></div>
+    </footer>
+</body>
+</html>

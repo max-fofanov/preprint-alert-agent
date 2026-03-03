@@ -2,7 +2,7 @@ name: Daily Preprint Report
 
 on:
   schedule:
-    - cron: "30 5 * * *" # 8:30 Moscow time (UTC+3)
+    - cron: "30 5 * * 1-5" # 8:30 Moscow time (UTC+3), Mon-Fri only
   workflow_dispatch: # manual trigger
 
 permissions:

@@ -33,12 +33,40 @@ def extract_affiliations(soup: BeautifulSoup) -> list[str]:
     return affiliations
 
 
+# Domains that are arXiv boilerplate, not paper repos
+_BOILERPLATE_REPOS = {"arxiv", "brucemiller"}
+
+
+def extract_repo_links(soup: BeautifulSoup) -> list[str]:
+    """
+    Extract GitHub and Hugging Face links from paper HTML.
+
+    Filters out arXiv infrastructure links (LaTeXML, html_feedback, etc.).
+    Returns deduplicated list of URLs.
+    """
+    links: list[str] = []
+    for a in soup.find_all("a", href=True):
+        href = a["href"]
+        if not re.match(r"https?://(github\.com|huggingface\.co)/", href):
+            continue
+        # Strip fragment and trailing slash for dedup
+        url = href.split("#")[0].rstrip("/")
+        # Skip arXiv boilerplate repos
+        parts = url.split("/")
+        if len(parts) >= 4 and parts[3].lower() in _BOILERPLATE_REPOS:
+            continue
+        if url not in links:
+            links.append(url)
+    return links
+
+
 @dataclass
 class PaperHTML:
     """Parsed HTML content and metadata from an arXiv paper."""
 
     text: str
     affiliations: list[str]
+    repo_links: list[str]
 
 
 async def fetch_paper_html(paper: Paper) -> PaperHTML | None:
@@ -62,8 +90,9 @@ async def fetch_paper_html(paper: Paper) -> PaperHTML | None:
 
     soup = BeautifulSoup(response.text, "lxml")
 
-    # Extract affiliations before we strip elements
+    # Extract metadata before we strip elements
     affiliations = extract_affiliations(soup)
+    repo_links = extract_repo_links(soup)
 
     # Remove script and style elements
     for element in soup(["script", "style", "nav", "header", "footer"]):
@@ -86,7 +115,7 @@ async def fetch_paper_html(paper: Paper) -> PaperHTML | None:
             sections.append(section_text)
 
     text = "\n\n".join(sections) if sections else main_content.get_text(separator=" ", strip=True)
-    return PaperHTML(text=text, affiliations=affiliations)
+    return PaperHTML(text=text, affiliations=affiliations, repo_links=repo_links)
 
 
 def extract_methodology_section(html_content: str) -> str:

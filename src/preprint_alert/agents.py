@@ -23,6 +23,7 @@ class PaperAnalysis:
     methodology_insights: str
     why_interesting: str
     affiliations: list[str]
+    repo_links: list[str]
 
 
 class AgentState(dict):
@@ -130,8 +131,10 @@ async def analyze_single_paper(paper: Paper) -> PaperAnalysis:
     paper_html = await fetch_paper_html(paper)
 
     affiliations: list[str] = []
+    repo_links: list[str] = []
     if paper_html:
         affiliations = paper_html.affiliations
+        repo_links = paper_html.repo_links
         methodology = extract_methodology_section(paper_html.text)
         aff_line = f"Affiliations: {', '.join(affiliations)}\n\n" if affiliations else ""
         content_for_analysis = (
@@ -162,6 +165,7 @@ async def analyze_single_paper(paper: Paper) -> PaperAnalysis:
             methodology_insights="Analysis could not be completed.",
             why_interesting="",
             affiliations=affiliations,
+            repo_links=repo_links,
         )
 
     return PaperAnalysis(
@@ -170,6 +174,7 @@ async def analyze_single_paper(paper: Paper) -> PaperAnalysis:
         methodology_insights=response.content,
         why_interesting="",
         affiliations=affiliations,
+        repo_links=repo_links,
     )
 
 
@@ -247,6 +252,8 @@ async def report_writer_node(state: AgentState) -> AgentState:
         ]
         if a.affiliations:
             lines.append(f"Affiliations: {', '.join(a.affiliations)}")
+        if a.repo_links:
+            lines.append(f"Code/Models: {', '.join(a.repo_links)}")
         lines.append(f"Analysis:\n{a.methodology_insights}")
         return "\n".join(lines)
 

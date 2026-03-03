@@ -2,7 +2,11 @@
 
 from bs4 import BeautifulSoup
 
-from preprint_alert.html_fetcher import extract_affiliations, extract_methodology_section
+from preprint_alert.html_fetcher import (
+    extract_affiliations,
+    extract_methodology_section,
+    extract_repo_links,
+)
 
 
 def test_extract_methodology_finds_numbered_section():
@@ -137,4 +141,55 @@ def test_extract_affiliations_empty_affiliation_skipped():
     """
     soup = BeautifulSoup(html, "html.parser")
     result = extract_affiliations(soup)
+    assert result == []
+
+
+# --- Repo link extraction tests ---
+
+
+def test_extract_repo_links_github():
+    html = """
+    <a href="https://github.com/facebookresearch/CRAG/">code</a>
+    <a href="https://example.com">other</a>
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    result = extract_repo_links(soup)
+    assert result == ["https://github.com/facebookresearch/CRAG"]
+
+
+def test_extract_repo_links_huggingface():
+    html = """
+    <a href="https://huggingface.co/meta-llama/Llama-3">model</a>
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    result = extract_repo_links(soup)
+    assert result == ["https://huggingface.co/meta-llama/Llama-3"]
+
+
+def test_extract_repo_links_filters_arxiv_boilerplate():
+    html = """
+    <a href="https://github.com/deepseek-ai/DeepSeek-V2">real repo</a>
+    <a href="https://github.com/arXiv/html_feedback/issues">feedback</a>
+    <a href="https://github.com/brucemiller/LaTeXML/issues">latexml</a>
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    result = extract_repo_links(soup)
+    assert result == ["https://github.com/deepseek-ai/DeepSeek-V2"]
+
+
+def test_extract_repo_links_deduplicates():
+    html = """
+    <a href="https://github.com/org/repo">link 1</a>
+    <a href="https://github.com/org/repo#section">link 2</a>
+    <a href="https://github.com/org/repo/">link 3</a>
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    result = extract_repo_links(soup)
+    assert result == ["https://github.com/org/repo"]
+
+
+def test_extract_repo_links_none_found():
+    html = "<a href='https://example.com'>nothing here</a>"
+    soup = BeautifulSoup(html, "html.parser")
+    result = extract_repo_links(soup)
     assert result == []

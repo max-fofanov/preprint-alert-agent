@@ -22,6 +22,7 @@ class PaperAnalysis:
     summary: str
     methodology_insights: str
     why_interesting: str
+    affiliations: list[str]
 
 
 class AgentState(dict):
@@ -126,13 +127,17 @@ async def analyze_single_paper(paper: Paper) -> PaperAnalysis:
     logger.info("Analyzing: %s...", paper.title[:60])
 
     # Fetch full HTML content
-    html_content = await fetch_paper_html(paper)
+    paper_html = await fetch_paper_html(paper)
 
-    if html_content:
-        methodology = extract_methodology_section(html_content)
+    affiliations: list[str] = []
+    if paper_html:
+        affiliations = paper_html.affiliations
+        methodology = extract_methodology_section(paper_html.text)
+        aff_line = f"Affiliations: {', '.join(affiliations)}\n\n" if affiliations else ""
         content_for_analysis = (
             f"Title: {paper.title}\n\n"
             f"Abstract: {paper.abstract}\n\n"
+            f"{aff_line}"
             f"Methodology section:\n{methodology[:10000]}"
         )
     else:
@@ -156,6 +161,7 @@ async def analyze_single_paper(paper: Paper) -> PaperAnalysis:
             summary="Analysis unavailable due to an error.",
             methodology_insights="Analysis could not be completed.",
             why_interesting="",
+            affiliations=affiliations,
         )
 
     return PaperAnalysis(
@@ -163,6 +169,7 @@ async def analyze_single_paper(paper: Paper) -> PaperAnalysis:
         summary=response.content[:500],
         methodology_insights=response.content,
         why_interesting="",
+        affiliations=affiliations,
     )
 
 
@@ -232,13 +239,18 @@ async def report_writer_node(state: AgentState) -> AgentState:
     logger.info("Writing report...")
 
     # Format analyses for the report writer
-    analyses_text = "\n\n---\n\n".join(
-        f"PAPER: {a.paper.title}\n"
-        f"URL (use this in markdown links): {a.paper.link}\n"
-        f"Authors: {', '.join(a.paper.authors[:5])}\n"
-        f"Analysis:\n{a.methodology_insights}"
-        for a in analyses
-    )
+    def _format_analysis(a: PaperAnalysis) -> str:
+        lines = [
+            f"PAPER: {a.paper.title}",
+            f"URL (use this in markdown links): {a.paper.link}",
+            f"Authors: {', '.join(a.paper.authors[:5])}",
+        ]
+        if a.affiliations:
+            lines.append(f"Affiliations: {', '.join(a.affiliations)}")
+        lines.append(f"Analysis:\n{a.methodology_insights}")
+        return "\n".join(lines)
+
+    analyses_text = "\n\n---\n\n".join(_format_analysis(a) for a in analyses)
 
     llm = get_llm()
     try:

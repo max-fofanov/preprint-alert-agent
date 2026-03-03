@@ -29,6 +29,7 @@ async def test_analyst_node_handles_partial_failures():
         summary="Summary",
         methodology_insights="Insights",
         why_interesting="",
+        affiliations=["Google DeepMind"],
     )
 
     async def mock_analyze(paper):

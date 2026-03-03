@@ -1,6 +1,7 @@
 """Fetch and parse HTML content from arXiv papers."""
 
 import re
+from dataclasses import dataclass
 
 import httpx
 from bs4 import BeautifulSoup
@@ -8,11 +9,43 @@ from bs4 import BeautifulSoup
 from .arxiv_fetcher import Paper
 
 
-async def fetch_paper_html(paper: Paper) -> str | None:
+def extract_affiliations(soup: BeautifulSoup) -> list[str]:
+    """
+    Extract unique author affiliations from arXiv HTML (LaTeXML format).
+
+    Looks for ltx_contact/ltx_role_affiliation spans inside the ltx_authors block.
+    Returns deduplicated list of affiliation strings.
+    """
+    affiliations: list[str] = []
+    authors_div = soup.find("div", class_="ltx_authors")
+    if not authors_div:
+        return affiliations
+
+    for aff in authors_div.find_all("span", class_="ltx_role_affiliation"):
+        text = aff.get_text(separator=" ", strip=True)
+        # Strip superscript numbers/markers that LaTeXML leaves in the text
+        text = re.sub(r"\b\d+\b", "", text)
+        # Collapse whitespace and stray commas left after stripping numbers
+        text = re.sub(r"\s+", " ", text).strip().strip(",").strip()
+        if text and text not in affiliations:
+            affiliations.append(text)
+
+    return affiliations
+
+
+@dataclass
+class PaperHTML:
+    """Parsed HTML content and metadata from an arXiv paper."""
+
+    text: str
+    affiliations: list[str]
+
+
+async def fetch_paper_html(paper: Paper) -> PaperHTML | None:
     """
     Fetch the HTML content of a paper from arXiv.
 
-    Returns the main text content extracted from the HTML, or None if unavailable.
+    Returns parsed text content and affiliations, or None if unavailable.
     Note: Not all arXiv papers have HTML versions available.
     """
     async with httpx.AsyncClient(follow_redirects=True) as client:
@@ -28,6 +61,9 @@ async def fetch_paper_html(paper: Paper) -> str | None:
             return None
 
     soup = BeautifulSoup(response.text, "lxml")
+
+    # Extract affiliations before we strip elements
+    affiliations = extract_affiliations(soup)
 
     # Remove script and style elements
     for element in soup(["script", "style", "nav", "header", "footer"]):
@@ -49,11 +85,8 @@ async def fetch_paper_html(paper: Paper) -> str | None:
         if section_text:
             sections.append(section_text)
 
-    if sections:
-        return "\n\n".join(sections)
-
-    # Fallback: just get all text
-    return main_content.get_text(separator=" ", strip=True)
+    text = "\n\n".join(sections) if sections else main_content.get_text(separator=" ", strip=True)
+    return PaperHTML(text=text, affiliations=affiliations)
 
 
 def extract_methodology_section(html_content: str) -> str:

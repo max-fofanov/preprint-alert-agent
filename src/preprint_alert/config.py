@@ -30,11 +30,23 @@ def get_llm() -> ChatOpenAI:
 
 # Research interests - customize this to match your interests
 RESEARCH_INTERESTS = """
-I'm interested in:
-- Reasoning/thinking
+I'm interested in papers with genuinely novel ideas in NLP and language models:
+- New architectures, training methods, or decoding strategies
+- Reasoning, planning, and agentic capabilities
+- Interpretability and mechanistic understanding of models
+- Creative approaches to retrieval, grounding, or tool use
+- Efficiency breakthroughs (not minor speedups — real paradigm shifts)
+- Surprising empirical findings that challenge conventional wisdom
 
-I'm less interested in:
-- Incremental improvements on existing benchmarks
-- Pure dataset papers without methodological novelty
-- Papers focused solely on non-English languages (unless methodology is novel)
+I am NOT interested in:
+- Incremental benchmark gains ("we applied X to task Y, got +3% F1")
+- Papers that simply fine-tune an existing model on a niche dataset
+- Pure dataset/benchmark papers without methodological novelty
+- Papers focused solely on non-English languages (unless the method is novel)
+- Straightforward application papers with no new ideas
+
+Prefer papers that make you think "that's clever" over papers that make you think
+"that's a lot of GPUs." Papers from strong research labs (e.g. Google, Meta, DeepMind,
+OpenAI, top universities) are often — but not always — more interesting due to broader
+ablation studies and bolder ideas.
 """

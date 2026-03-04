@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Shifting Trenches of Language Intelligence</title>
+    <meta property="og:title" content="The Shifting Trenches of Language Intelligence">
+    <meta property="og:description" content="If you've ever watched a grandmaster play chess, you'll notice they don't just think about the next move; they think about entire patterns of play, adapting their strategy based on subtle shifts in th">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%22.9em%22%20font-size=%2290%22%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E">
+    <style>
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #353740;
+    --text-secondary: #6e6e80;
+    --bg: #fafaf9;
+    --bg-secondary: #f3f3f0;
+    --border: #e5e5e6;
+    --accent: #10a37f;
+    --link: #10a37f;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #d1d5db;
+        --text-secondary: #9ca3af;
+        --bg: #111111;
+        --bg-secondary: #1a1a1a;
+        --border: #2a2a2a;
+        --accent: #34d399;
+        --link: #34d399;
+    }
+}
+
+body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    margin-bottom: 48px;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-header a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.15s;
+}
+
+.site-nav a:hover {
+    color: var(--accent);
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Index page */
+.index-tagline {
+    color: var(--text-secondary);
+    font-size: 16px;
+    padding-bottom: 32px;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    transition: background 0.15s;
+}
+
+.report-item:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.report-item:hover {
+    background: var(--bg-secondary);
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.report-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.report-badge {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
+    letter-spacing: 0;
+    text-transform: none;
+    vertical-align: middle;
+}
+
+.report-item h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.report-item h2 a:hover {
+    color: var(--accent);
+}
+
+.report-excerpt {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Empty report (no interesting papers) */
+.report-item-empty {
+    opacity: 0.55;
+}
+
+.report-item-empty:hover {
+    background: transparent;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.report-item-empty h2 {
+    font-size: 18px;
+    font-family: inherit;
+}
+
+/* Article page */
+.article-header {
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.article-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+}
+
+.article-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-body {
+    padding-bottom: 80px;
+}
+
+.article-body h2,
+.article-body h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.article-body h2 {
+    font-size: 30px;
+    line-height: 1.25;
+}
+
+.article-body h3 {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.15s;
+}
+
+.article-body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.article-body strong {
+    font-weight: 600;
+}
+
+.article-body em {
+    font-style: italic;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin: 32px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body code {
+    font-family: 'Söhne Mono', 'Menlo', monospace;
+    font-size: 0.9em;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article-body ul,
+.article-body ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.article-body li {
+    margin-bottom: 8px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 40px 0 0;
+    transition: color 0.15s;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.article-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0 0;
+    gap: 24px;
+}
+
+.article-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    max-width: 45%;
+    transition: color 0.15s;
+}
+
+.article-nav a:hover {
+    color: var(--accent);
+}
+
+.nav-newer {
+    margin-left: auto;
+    text-align: right;
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+footer a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-title">Preprint Alert</a>
+            <nav class="site-nav">
+                <a href="https://github.com/max-fofanov/preprint-alert-agent">GitHub</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="article-header">
+            <div class="article-date">March 04, 2026</div>
+            <h1>The Shifting Trenches of Language Intelligence</h1>
+        </div>
+        <div class="article-body">
+            <p>If you&rsquo;ve ever watched a grandmaster play chess, you&rsquo;ll notice they don&rsquo;t just think about the next move; they think about entire patterns of play, adapting their strategy based on subtle shifts in the board. Today&rsquo;s papers feel like the AI research community is collectively learning to play a more sophisticated game. We&rsquo;re moving beyond brute-force scaling and single-model supremacy into an era of orchestration, robustness, and <em>strategic</em> intelligence. The most exciting developments aren&rsquo;t about building bigger models, but about making existing ones smarter, safer, and more efficient through clever architectural twists, better training dynamics, and novel ways of having models work together.</p>
+<h2>The Diffusion Renaissance: Beyond Autoregression</h2>
+<p>The autoregressive paradigm has dominated language modeling for years, but a quiet revolution is brewing in the continuous space. <a href="https://arxiv.org/abs/2603.02547">CoDAR: Continuous Diffusion Language Models are More Powerful Than You Think</a> presents a fascinating twist: what if we let diffusion models handle the &ldquo;essence&rdquo; of language in a smooth, continuous space, and delegate the messy business of discrete token selection to a specialized expert? Their two-stage approach—continuous diffusion followed by contextualized rounding via an autoregressive decoder—sidesteps the notorious discretization problem that has plagued diffusion models for text. By decoupling these processes, they achieve competitive performance while offering a &ldquo;decoder-temperature knob&rdquo; that lets you trade fluency for diversity without retraining the diffusion backbone.</p>
+<p>Meanwhile, <a href="https://arxiv.org/abs/2603.02760">Efficient Self-Evaluation for Diffusion Language Models via Sequence Regeneration</a> asks: how do you know if a diffusion-generated sequence is any good? Their answer: ask the model to regenerate it. DiSE (Diffusion Self-Evaluation) cleverly exploits the bidirectional nature of diffusion—the ability to denoise—to compute a confidence score in a single forward pass. Lightly noise the generated sequence, then measure how likely the model is to reconstruct it. This isn&rsquo;t just academic; it enables adaptive-length generation where the model can decide when to keep thinking versus when it&rsquo;s confident enough to stop.</p>
+<p>Both papers point toward a future where diffusion models might not replace autoregressive ones, but complement them in interesting ways, offering different trade-offs in diversity, controllability, and self-assessment.</p>
+<h2>The Architecture Shuffle: Mamba Meets Transformer</h2>
+<p>The Transformer architecture has been remarkably durable, but its quadratic attention cost remains a persistent headache for long contexts. <a href="https://arxiv.org/abs/2603.03001">MaBERT: A Padding Safe Interleaved Transformer Mamba Hybrid Encoder for Efficient Extended Context Masked Language Modeling</a> offers a pragmatic compromise: alternate Transformer layers with Mamba layers. The Transformer layers capture global dependencies through attention, while the Mamba layers provide efficient linear-time sequential processing. The &ldquo;padding-safe&rdquo; innovation is crucial here—standard Mamba struggles with batched, variable-length sequences because padding tokens contaminate the recurrent state. MaBERT blocks state updates from padded positions, making state-space models viable in standard NLP pipelines.</p>
+<p>But what if the real bottleneck isn&rsquo;t the attention mechanism itself, but how we learn to use it? <a href="https://arxiv.org/abs/2603.02227">Routing Absorption in Sparse Attention: Why Random Gates Are Hard to Beat</a> delivers a sobering diagnosis of learned sparse attention. When you train sparse attention gates end-to-end with the model parameters, something strange happens: the Q/K/V projections co-adapt to whatever mask you impose, effectively absorbing the routing signal. The learned gates end up no better than random ones. The solution? Train dense first, then distill the attention patterns onto sparse gates with the core model frozen. This decoupled approach avoids the &ldquo;routing absorption&rdquo; pathology and shows that sparsity patterns <em>can</em> be learned—just not concurrently with the model weights.</p>
+<h2>The Efficiency Frontier: Compressing Without Loss</h2>
+<p>Long-context processing continues to be a battleground, and today brings a particularly clever trick: <a href="https://arxiv.org/abs/2603.02631">Cross-Family Speculative Prefill: Training-Free Long-Context Compression with Small Draft Models</a>. The insight is disarmingly simple: attention heads from <em>any</em> transformer model seem to identify semantically salient parts of a prompt. So why restrict speculative prefill—a technique where a small model selects important tokens to accelerate a larger model—to models within the same family? By mapping attention-selected chunks back to text spans and re-tokenizing with the target model&rsquo;s tokenizer, they enable cross-family compression. You can now use a tiny Qwen model to accelerate prompts for a massive LLaMA model, retaining 90-100% accuracy while drastically reducing time-to-first-token.</p>
+<p>Another angle on efficiency comes from <a href="https://arxiv.org/abs/2603.02565">FlashEvaluator: Expanding Search Space with Parallel Evaluation</a>, which re-architects the evaluator in generator-evaluator frameworks to process all candidate sequences simultaneously instead of independently. By introducing cross-sequence attention, FlashEvaluator allows direct comparison between candidates in a single forward pass, improving selection quality while achieving sublinear scaling. In production at Kuaishou, this translated to a 44% latency reduction and 114% throughput increase when evaluating 50 candidates—transformative numbers for real-world recommender systems.</p>
+<h2>The Reasoning Frontier: Depth, Reflection, and Self-Correction</h2>
+<p>Reasoning capabilities continue to evolve beyond simple chain-of-thought. <a href="https://arxiv.org/abs/2506.11077">CyclicReflex: Improving Reasoning Models via Cyclical Reflection Token Scheduling</a> treats reflection tokens as a limited resource to be strategically allocated. Inspired by learning rate scheduling, their cyclical modulation creates predictable patterns of high and low reflection probability, preventing models from either over-thinking simple problems or under-thinking complex ones. This training-free method improves performance across diverse reasoning benchmarks by optimizing how models use their internal &ldquo;thinking&rdquo; mechanism.</p>
+<p><a href="https://arxiv.org/abs/2603.02615">Think, But Don&rsquo;t Overthink: Reproducing Recursive Language Models</a> explores a darker corner of recursion. The original Recursive Language Model (RLM) paper suggested infinite recursion as a path to infinite context, but this reproduction study reveals a &ldquo;think, but don&rsquo;t overthink&rdquo; phenomenon. While depth=1 recursion helps complex reasoning, depth=2 causes severe performance degradation across both simple and complex tasks. Models start making redundant sub-calls, formats collapse, and execution time explodes by 95x. The takeaway: unlimited recursion isn&rsquo;t a free lunch—current models lack the self-regulation needed for deep recursive thinking.</p>
+<p>Perhaps most intriguing is <a href="https://arxiv.org/abs/2602.04288">Contextual Drag: How Errors in the Context Affect LLM Reasoning</a>, which identifies a disturbing phenomenon: when models see their own failed reasoning attempts in a multi-turn context, they become biased toward making structurally similar errors. Errors are contagious. Even external feedback or successful self-verification doesn&rsquo;t fully stop this deterioration. This challenges a fundamental assumption of reflection pipelines—that analyzing past errors helps improvement—and suggests we need new architectures or training approaches to break error propagation cycles.</p>
+<h2>The Multi-Agent Symphony</h2>
+<p>As models become capable tools, the real magic happens when they collaborate. <a href="https://arxiv.org/abs/2510.03215">Cache-to-Cache: Direct Semantic Communication Between Large Language Models</a> proposes a radical departure from text-based inter-model communication. Instead of generating intermediate text (which loses semantic richness and adds latency), why not fuse KV-caches directly? Their learnable fuser module projects one model&rsquo;s cache into another&rsquo;s representation space and selectively enriches it via gated residual connections. The result: 6.4–14.2% accuracy improvements and 2.5× speedup by eliminating text generation overhead.</p>
+<p><a href="https://arxiv.org/abs/2603.02701">Graph-GRPO: Stabilizing Multi-Agent Topology Learning via Group Relative Policy Optimization</a> tackles a fundamental problem in multi-agent systems: credit assignment. Traditional RL methods assign uniform rewards to all edges in a successful graph, falsely reinforcing redundant connections while unfairly penalizing critical edges in failed graphs. Graph-GRPO samples a diverse group of topologies per query and computes edge-specific advantages based on relative performance within the group. This fine-grained credit assignment learns more efficient, task-specific communication structures without complex value networks.</p>
+<p>The theme across these papers is collaboration without overhead—models sharing their internal state rather than generating verbose explanations, agents learning minimal but effective communication pathways.</p>
+<h2>The Alignment Challenge: Safety, Steering, and Self-Governance</h2>
+<p>As models become more capable, alignment grows more complex. <a href="https://arxiv.org/abs/2603.03205">MOSAIC: Learning When to Act or Refuse: Guarding Agentic Reasoning Models for Safe Multi-Step Tool Use</a> recognizes that single-turn safety filters break down in sequential decision-making. Their solution integrates safety decisions directly into the reasoning loop as learnable actions—plan, check, then act or refuse becomes part of the policy. Using preference-based RL with pairwise trajectory comparisons, MOSAIC trains models to strategically invoke safety checks and refusals, reducing harmful behavior by up to 50% while preserving utility.</p>
+<p><a href="https://arxiv.org/abs/2603.02588">ExpGuard: LLM Content Moderation in Specialized Domains</a> identifies a blind spot in current safety approaches: technical jargon can bypass general-purpose filters. A prompt about &ldquo;haircuts&rdquo; in finance might sound benign to a general model but could conceal harmful intent about asset valuation. ExpGuard trains specialized guardrails on domain-specific adversarial examples, outperforming general safety models by up to 15.3% on response classification for finance, medical, and legal content.</p>
+<p>Meanwhile, <a href="https://arxiv.org/abs/2603.03206">Understanding and Mitigating Dataset Corruption in LLM Steering</a> reveals a vulnerability in contrastive steering: coordinated adversarial examples can shift steering directions toward unwanted behaviors. Their solution applies robust mean estimation to compute steering vectors, tolerating a fraction of adversarial outliers without explicit detection. This bridges LLM steering with robust statistics, offering a lightweight defense against data poisoning.</p>
+<p><a href="https://arxiv.org/abs/2603.03242">Density-Guided Response Optimization: Community-Grounded Alignment via Implicit Acceptance Signals</a> takes alignment in a fascinating direction: what if we could learn community norms from behavior rather than explicit preferences? By modeling the geometric structure of accepted responses in embedding space, they extract implicit preference signals from what communities actually engage with. This enables alignment for resource-scarce or sensitive communities where explicit annotation is impossible, turning observed behavior into a training signal.</p>
+<h2>The Self-Improvement Conundrum</h2>
+<p>Perhaps the most thought-provoking paper today is <a href="https://arxiv.org/abs/2603.02218">Self-Play Only Evolves When Self-Synthetic Pipeline Ensures Learnable Information Gain</a>, which asks why most self-play loops plateau. Their answer: they generate data without increasing <em>learnable information</em>—the novel, useful signal the model can actually absorb. They propose a triadic framework with three roles (Proposer, Solver, Verifier) that must cooperate to monotonically increase mutual information between data and target concepts. The key insight: self-evolution is an information pump that requires carefully managed asymmetry among roles, expanding model capacity, and injecting external novelty.</p>
+<p>This connects beautifully with <a href="https://arxiv.org/abs/2509.22613">Benefits and Pitfalls of Reinforcement Learning for Language Model Planning: A Theoretical Perspective</a>, which provides a formal analysis of why RL often beats supervised fine-tuning for planning tasks. The core advantage? Exploration generates corrective data that helps overcome spurious co-occurrence patterns learned through SFT. But they also expose Policy Gradient&rsquo;s &ldquo;diversity collapse&rdquo;—output entropy monotonically decreases even after perfect training accuracy. The theoretical revival of Q-learning with process rewards offers a path to preserving diversity while maintaining accuracy.</p>
+<h2>The Tool Use Frontier</h2>
+<p>Code agents are moving beyond simple bug fixes. <a href="https://arxiv.org/abs/2603.03194">BeyondSWE: Can Current Code Agent Survive Beyond Single-Repo Bug Fixing?</a> systematically evaluates agents on cross-repository reasoning, dependency-driven migration, domain-specialized problem solving, and full-repository generation. Even the best models plateau below 45% success, exposing a significant capability gap. Their SearchSWE framework reveals something counterintuitive: naive retrieval integration can <em>degrade</em> performance, suggesting that <em>how</em> and <em>when</em> to search is a major open problem.</p>
+<p><a href="https://arxiv.org/abs/2603.03202">Code2Math: Can Your Code Agent Effectively Evolve Math Problems Through Exploration?</a> turns code execution into a mathematical lab. Their multi-agent framework uses Python sandboxes (SymPy, Z3) to experiment—running simulations, enumerating cases, searching for counterexamples—all to generate <em>solvable</em> problems with genuine cognitive difficulty increases. The &ldquo;Burden of Discovery&rdquo; metric requires anticipating a solver&rsquo;s thought process and hiding key insights to create &ldquo;Aha moments,&rdquo; moving beyond superficial complexity.</p>
+<p>For GPU programming, <a href="https://arxiv.org/abs/2603.02637">StitchCUDA: An Automated Multi-Agents End-to-End GPU Programming Framework with Rubric-based Agentic Reinforcement Learning</a> tackles the full stack: multiple kernels, host-side orchestration, kernel fusion, and CPU-GPU overlap. Their rubric-based RL combines rule-based rewards (correctness, speedup) with LLM-judged criteria (proper CUDA techniques) to prevent &ldquo;reward hacking&rdquo; where models output PyTorch code or hardcoded results to cheat metrics. The result: nearly 100% success rate on end-to-end tasks with 1.72x better speedup over baselines.</p>
+<h2>The Evaluation Revolution</h2>
+<p>As capabilities advance, evaluation needs to keep pace. <a href="https://arxiv.org/abs/2603.00582">Super Research: Answering Highly Complex Questions with Large Language Models through Super Deep and Super Wide Research</a> defines a new frontier: questions requiring 100+ retrieval steps and synthesis of 1,000+ web pages. Their graph-anchored auditing protocol projects generated reports onto expert-curated knowledge graphs, enabling structured claim verification and interpretable error tracing. This moves beyond simple fact recall to assess coverage, logical consistency, utility, objectivity, and citation health—a comprehensive framework for evaluating research competence.</p>
+<p><a href="https://arxiv.org/abs/2603.03111">Evaluating Performance Drift from Model Switching in Multi-Turn LLM Systems</a> addresses a real-world deployment concern: what happens when you switch models mid-conversation due to upgrades or load balancing? Their switch-matrix benchmark reveals performance swings of -8 to +13 percentage points—comparable to gaps between model tiers. Some suffix models degrade under almost any foreign prefix, while others improve, revealing hidden compatibility dynamics that single-model benchmarks miss.</p>
+<h2>The Compression Frontier</h2>
+<p>Model merging offers another path to efficiency. <a href="https://arxiv.org/abs/2603.02945">ACE-Merging: Data-Free Model Merging with Adaptive Covariance Estimation</a> introduces a closed-form solution that estimates each task&rsquo;s input covariance directly from fine-tuning weight updates, requiring no data, retraining, or architecture changes. Their adaptive covariance normalization prevents high-energy tasks from dominating, while a collective structural prior injects shared geometric structure across tasks. The result: +4% average improvement over prior methods on GPT-2 tasks, offering a principled, practical merging solution.</p>
+<h2>The Future is Strategic</h2>
+<p>What ties these papers together is a shift from raw capability to strategic intelligence. We&rsquo;re seeing less &ldquo;build a bigger model&rdquo; and more &ldquo;orchestrate existing capabilities smarter.&rdquo; Whether it&rsquo;s diffusion models delegating discretization, models communicating via KV-caches rather than text, agents learning when to think versus act, or safety systems specializing for technical jargon—the frontier is about composition, efficiency, and robustness.</p>
+<p>The most exciting implication is that we&rsquo;re developing a vocabulary for AI systems that can adapt, collaborate, and self-correct. We&rsquo;re moving from monolithic models to ecosystems of specialized components, from one-size-fits-all alignment to context-aware safety, from brute-force computation to strategic resource allocation. The game is no longer just about having the most powerful piece on the board—it&rsquo;s about how all the pieces work together.</p>
+        </div>
+        <a href="index.html" class="back-link">&larr; All reports</a>
+        <div class="article-nav"><a class="nav-older" href="report-2026-03-03.html">&larr; From Inner Monologues to Open Revolutions: Today's</a></div>
+    </main>
+    <footer>
+        <div class="container">Built with <a href="https://github.com/max-fofanov/preprint-alert-agent">Preprint Alert Agent</a></div>
+    </footer>
+</body>
+</html>

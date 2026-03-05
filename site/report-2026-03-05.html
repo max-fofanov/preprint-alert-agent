@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Fabric of Thought: Weaving Memory, Verification, and Control into LLMs</title>
+    <meta property="og:title" content="The Fabric of Thought: Weaving Memory, Verification, and Control into LLMs">
+    <meta property="og:description" content="Today's arXiv haul reads like a masterclass in turning philosophical questions about intelligence into engineering blueprints. If you ever wondered how we might move beyond language models that simply">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%22.9em%22%20font-size=%2290%22%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E">
+    <style>
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #353740;
+    --text-secondary: #6e6e80;
+    --bg: #fafaf9;
+    --bg-secondary: #f3f3f0;
+    --border: #e5e5e6;
+    --accent: #10a37f;
+    --link: #10a37f;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #d1d5db;
+        --text-secondary: #9ca3af;
+        --bg: #111111;
+        --bg-secondary: #1a1a1a;
+        --border: #2a2a2a;
+        --accent: #34d399;
+        --link: #34d399;
+    }
+}
+
+body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    margin-bottom: 48px;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-header a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.15s;
+}
+
+.site-nav a:hover {
+    color: var(--accent);
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Index page */
+.index-tagline {
+    color: var(--text-secondary);
+    font-size: 16px;
+    padding-bottom: 32px;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    transition: background 0.15s;
+}
+
+.report-item:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.report-item:hover {
+    background: var(--bg-secondary);
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.report-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.report-badge {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
+    letter-spacing: 0;
+    text-transform: none;
+    vertical-align: middle;
+}
+
+.report-item h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.report-item h2 a:hover {
+    color: var(--accent);
+}
+
+.report-excerpt {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Empty report (no interesting papers) */
+.report-item-empty {
+    opacity: 0.55;
+}
+
+.report-item-empty:hover {
+    background: transparent;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.report-item-empty h2 {
+    font-size: 18px;
+    font-family: inherit;
+}
+
+/* Article page */
+.article-header {
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.article-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+}
+
+.article-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-body {
+    padding-bottom: 80px;
+}
+
+.article-body h2,
+.article-body h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.article-body h2 {
+    font-size: 30px;
+    line-height: 1.25;
+}
+
+.article-body h3 {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.15s;
+}
+
+.article-body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.article-body strong {
+    font-weight: 600;
+}
+
+.article-body em {
+    font-style: italic;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin: 32px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body code {
+    font-family: 'Söhne Mono', 'Menlo', monospace;
+    font-size: 0.9em;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article-body ul,
+.article-body ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.article-body li {
+    margin-bottom: 8px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 40px 0 0;
+    transition: color 0.15s;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.article-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0 0;
+    gap: 24px;
+}
+
+.article-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    max-width: 45%;
+    transition: color 0.15s;
+}
+
+.article-nav a:hover {
+    color: var(--accent);
+}
+
+.nav-newer {
+    margin-left: auto;
+    text-align: right;
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+footer a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-title">Preprint Alert</a>
+            <nav class="site-nav">
+                <a href="https://github.com/max-fofanov/preprint-alert-agent">GitHub</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="article-header">
+            <div class="article-date">March 05, 2026</div>
+            <h1>The Fabric of Thought: Weaving Memory, Verification, and Control into LLMs</h1>
+        </div>
+        <div class="article-body">
+            <p>Today&rsquo;s arXiv haul reads like a masterclass in turning philosophical questions about intelligence into engineering blueprints. If you ever wondered how we might move beyond language models that simply <em>predict</em> text to systems that genuinely <em>think</em>, reason, and remember, the answers are taking shape. From orchestrating lifelong memory to catching reward hackers in the act, researchers are stitching together the missing pieces of cognitive architecture.</p>
+<p>The dominant theme emerging is one of <strong>structure</strong>—not just in the data, but in the very process of thought. We&rsquo;re seeing a move from monolithic, black-box generation to systems that explicitly build, manipulate, and reason over structured representations. This shift is enabling everything from more efficient inference to more trustworthy scientific discovery.</p>
+<h2>The Memory of Theseus</h2>
+<p>Perhaps the most elegant demonstration of this comes from systems that externalize memory. Consider <strong><a href="https://arxiv.org/abs/2603.03290">AriadneMem: Threading the Maze of Lifelong Memory for LLM Agents</a></strong>. Rather than trying to cram everything into context windows or finicky vector stores, the researchers took inspiration from Theseus navigating the labyrinth: you need a thread. Their solution? Transform raw dialogue streams into an <strong>evolutionary graph</strong> that explicitly preserves temporal state transitions. The clever bit is the decoupling: offline memory construction becomes a separate phase from online reasoning. This lets you use algorithmic graph search (Steiner Tree approximations) instead of expensive iterative LLM planning to find connections between evidence. The result? A <strong>77.8% runtime reduction</strong> while actually improving multi-hop reasoning accuracy. It&rsquo;s a beautiful example of shifting computation from expensive neural operations to efficient symbolic algorithms.</p>
+<p>This idea of structured, external memory gets another compelling implementation in <strong><a href="https://arxiv.org/abs/2603.03296">PlugMem: A Task-Agnostic Plugin Memory Module for LLM Agents</a></strong>. Instead of just storing raw episodes, PlugMem extracts and indexes <em>knowledge itself</em> into two types: semantic memory (factual propositions like &ldquo;Tam Sventon is a fictional detective&rdquo;) and procedural memory (prescriptive workflows like &ldquo;to find the lowest price: search, sort, verify&rdquo;). The memory becomes a graph where knowledge—not entities or text chunks—is the primary retrievable unit. This cognitive-inspired separation mirrors how humans organize memory, allowing agents to reason over abstracted strategies rather than sifting through verbose logs.</p>
+<p>The efficiency gains here are staggering. PlugMem achieves the highest <strong>information density</strong>—more task-relevant knowledge per token—compared to raw memory retrieval methods. When you&rsquo;re dealing with agents that might operate for weeks or months, this compactness becomes essential. Both papers point toward a future where agents don&rsquo;t just have memory; they have <em>organized</em> memory that supports efficient reasoning.</p>
+<h2>The Architects of Attention</h2>
+<p>While some researchers are building external structures, others are dissecting the internal ones. <strong><a href="https://arxiv.org/abs/2603.03459">Half the Nonlinearity Is Wasted: Measuring and Reallocating the Transformer&rsquo;s MLP Budget</a></strong> asks a deceptively simple question: do transformers really need all that expensive MLP computation? Through meticulous analysis, the authors discover something remarkable: <strong>many MLP computations are functionally near-linear</strong>. They found that predicting which tokens need nonlinearity from token identity alone is impossible—it&rsquo;s all about context—but the <em>distribution</em> of nonlinearity need is highly skewed.</p>
+<p>Their solution? A <strong>data-driven, context-aware gating mechanism</strong> that dynamically decides when an MLP layer can be replaced with a linear approximation. A gate with just d+1 parameters (a single linear projection + sigmoid) can route 25-56% of tokens to the linear surrogate with less than 1% perplexity increase. Even more striking: fully linearizing specific middle layers in GPT-2 actually <em>improved</em> perplexity by 10.2% with fine-tuning. This suggests the standard transformer may over-allocate nonlinear capacity, with some MLPs learning to perform harmful &ldquo;corrections.&rdquo; The implications for efficient inference are profound: we might be able to build cheaper, faster models by strategically removing unnecessary complexity.</p>
+<p>This surgical precision continues in <strong><a href="https://arxiv.org/abs/2603.03328">StructLens: A Structural Lens for Language Models via Maximum Spanning Trees</a></strong>, which provides a new way to peer inside the transformer black box. Instead of looking at individual neurons or attention patterns, they build <strong>maximum spanning trees from token-level semantic representations</strong> in the residual stream. Each layer becomes a dependency tree of semantic relations, and comparing these trees across layers reveals how token relationships evolve. The finding? <strong>LM layers aren&rsquo;t just incrementally refining representations—they&rsquo;re dynamically restructuring token-wise semantic graphs.</strong> This structural lens proves useful too: using tree-based similarity metrics for layer pruning outperforms cosine-based methods, showing that preserving architectural diversity matters for performance.</p>
+<h2>The Proof is in the Process</h2>
+<p>Perhaps the most exciting developments are those that rethink how models generate and verify their own reasoning. <strong><a href="https://arxiv.org/abs/2603.04304">V₁: Unifying Generation and Self-Verification for Parallel Reasoners</a></strong> tackles a fundamental bottleneck: verification. The authors argue that models are inherently better at <strong>pairwise comparison</strong> than assigning absolute scores. Their tournament-based algorithm, V₁-Infer, dynamically allocates verification compute by focusing comparisons on candidate pairs where the model is most uncertain. But the real innovation is V₁-PairRL, which jointly trains a single model as both generator and pairwise verifier through reinforcement learning. The result? <strong>Pass@1 improvements up to 10%</strong> on code and math benchmarks, achieved more efficiently than recent test-time scaling methods.</p>
+<p>Meanwhile, <strong><a href="https://arxiv.org/abs/2603.03297">TTSR: Test-Time Self-Reflection for Continual Reasoning Improvement</a></strong> takes a different approach to self-improvement. Instead of relying on noisy pseudo-labels from hard test questions, a single LLM alternates between Student and Teacher roles at test time. The Teacher analyzes the Student&rsquo;s <em>failed</em> reasoning traces, identifies error patterns (&ldquo;misinterprets inequalities,&rdquo; &ldquo;skips case analysis&rdquo;), and synthesizes <em>targeted variant questions</em> that isolate those weaknesses. This creates a &ldquo;learnable regime&rdquo; where the model receives reliable learning signals rather than binary success/failure feedback. The result is stable, autonomous improvement during inference—no external supervision needed.</p>
+<p>For those wanting even more control, <strong><a href="https://arxiv.org/abs/2603.03305">Draft-Conditioned Constrained Decoding for Structured Generation in LLMs</a></strong> offers an elegant solution to the perennial tension between semantic correctness and syntactic validity. Traditional constrained decoding applies masking at every token step, distorting the model&rsquo;s trajectory when valid continuations have low probability mass. DCCD&rsquo;s clever two-step process: first generate an <strong>unconstrained draft</strong> capturing semantic intent, then apply constrained decoding <em>conditioned on that draft</em> to guarantee structural validity. By increasing &ldquo;feasible mass&rdquo; before applying constraints, they reduce the KL-divergence &ldquo;projection tax&rdquo; that accumulates token-by-token. The improvements are dramatic: <strong>+24 percentage points</strong> in strict structured accuracy on benchmarks like GSM8K.</p>
+<h2>The Watchful Guardians</h2>
+<p>As these systems become more capable, we need better ways to understand and control them. Several papers today offer sophisticated monitoring and steering techniques.</p>
+<p><strong><a href="https://arxiv.org/abs/2603.03291">One Bias After Another: Mechanistic Reward Shaping and Persistent Biases in Language Reward Models</a></strong> reveals that even state-of-the-art reward models exhibit strong biases—length, position, sycophancy—that contaminate alignment. Their solution? <strong>Mechanistic reward shaping via linear null-space projection</strong>. They learn linear probes to detect spurious features (like answer length), then project the RM&rsquo;s hidden representations into the null space of those probes before computing rewards. This removes biased directions while preserving other reward signals, all without retraining. The method reduces targeted biases by <strong>40-90%</strong> without hurting performance on RewardBench-2. It&rsquo;s a lightweight, post-hoc fix for common RM flaws that can be deployed immediately.</p>
+<p>For real-time monitoring, <strong><a href="https://arxiv.org/abs/2603.04069">Monitoring Emergent Reward Hacking During Generation via Internal Activations</a></strong> shifts detection from final outputs to internal representations <em>during</em> generation. By analyzing token-wise residual stream activations through sparse autoencoders, they can detect reward-hacking behavior as it emerges, often early in generation chains. This provides an earlier, complementary signal to output-based evaluation—a crucial advance for catching misalignment before it manifests.</p>
+<p>Meanwhile, <strong><a href="https://arxiv.org/abs/2603.03326">Controllable and explainable personality sliders for LLMs at inference time</a></strong> offers fine-grained steering without retraining. Their Sequential Adaptive Steering (SAS) procedure orthogonalizes activation steering vectors by exposing each new probe to distributional shifts caused by prior probes. This enables compositional control of multiple personality traits without destructive interference. The result? <strong>Continuous, multi-dimensional personality control</strong> via simple coefficient adjustments—users can instantly create custom persona blends while maintaining generation quality.</p>
+<h2>The Efficiency Frontier</h2>
+<p>Efficiency breakthroughs continue to push what&rsquo;s possible with limited compute. <strong><a href="https://arxiv.org/abs/2603.03333">DropMatch: Training-free Dropout Sampling for Semantic Token Acceptance in Speculative Decoding</a></strong> offers a clever upgrade to speculative decoding. Instead of training a draft model to mimic the target, they apply <strong>Monte Carlo dropout exclusively to the LM head</strong> during verification to generate multiple stochastic decoding paths. This creates an empirical distribution of the target model&rsquo;s predictions against which draft tokens are evaluated using Jensen-Shannon divergence. The result? <strong>1.09x to 1.33x speedup</strong> over standard speculative decoding, with additional gains when combined with methods like EAGLE3.</p>
+<p><strong><a href="https://arxiv.org/abs/2603.03301">From Exact Hits to Close Enough: Semantic Caching for LLM Embeddings</a></strong> tackles a different efficiency problem: cache replacement for semantic caching. The insight? <strong>Frequency-based policies</strong> (especially their novel SphereLFU) outperform recency-based ones because what matters isn&rsquo;t how recently a semantic concept was accessed, but how often it serves as a hub for many similar queries. SphereLFU aggregates frequency counts for all queries within a cached item&rsquo;s semantic sphere, prioritizing embeddings that act as semantic hubs.</p>
+<h2>The Search for Truth</h2>
+<p>In a world increasingly mediated by AI, verification becomes paramount. <strong><a href="https://arxiv.org/abs/2603.03299">How LLMs Cite and Why It Matters: A Cross-Model Audit of Reference Fabrication</a></strong> delivers sobering findings through a massive audit of <strong>10 commercially deployed LLMs</strong> across four domains. Citation hallucination rates range from <strong>11.4% to 56.8%</strong>—a fivefold difference showing the problem&rsquo;s severity depends heavily on model, domain, and prompt framing. Crucially, they found no model cites spontaneously; hallucination is <strong>prompt-induced</strong>, not intrinsic. Their practical solutions? <strong>Multi-model consensus</strong> (if &gt;3 LLMs independently generate the same citation, accuracy is 95.6%) and a <strong>lightweight classifier</strong> using only bibliographic string features that achieves ~0.87 AUC without querying external databases.</p>
+<p>For scientific discovery, <strong><a href="https://arxiv.org/abs/2603.03756">MOOSE-Star: Unlocking Tractable Training for Scientific Discovery by Breaking the Complexity Barrier</a></strong> tackles the fundamental challenge of modeling hypothesis generation. They decompose the exponentially complex problem into sequential subtasks (retrieval &amp; composition) with bounded composition and hierarchical search, achieving <strong>logarithmic scaling</strong> in the best case. By training models to be robust within a <em>semantic tolerance space</em> around ground-truth inspirations, they turn an exponential problem into a tractable one—enabling continuous test-time scaling where brute-force sampling plateaus.</p>
+<h2>The Future is Structured</h2>
+<p>What ties all these papers together is a move from unstructured, monolithic processing toward <strong>explicitly structured reasoning</strong>. Whether it&rsquo;s memory organized as graphs, verification through pairwise tournaments, or reasoning decomposed into taxonomic hierarchies, the most promising advances are those that impose useful structure on the problem.</p>
+<p>This structural thinking extends to how we evaluate these systems. <strong><a href="https://arxiv.org/abs/2603.03790">T2S-Bench &amp; Structure-of-Thought: Benchmarking and Prompting Comprehensive Text-to-Structure Reasoning</a></strong> provides a rigorous benchmark where questions explicitly require comprehending and constructing underlying structure from text. Their findings reveal a major capability gap: even top models achieve only <strong>58.1% node accuracy</strong> on end-to-end extraction and <strong>~52% average accuracy</strong> on multi-hop reasoning. But their Structure-of-Thought prompting technique shows the way forward, improving performance by <strong>+5.7%</strong> on 7B models.</p>
+<p>The message from today&rsquo;s research is clear: the next generation of language models won&rsquo;t just be bigger or better at predicting tokens. They&rsquo;ll be <strong>architects of thought</strong>—systems that build, manipulate, and reason over structured representations, that verify their own reasoning, that remember efficiently and selectively, and that can be steered with precision. We&rsquo;re moving from models that generate text to systems that construct understanding.</p>
+        </div>
+        <a href="index.html" class="back-link">&larr; All reports</a>
+        <div class="article-nav"><a class="nav-older" href="report-2026-03-04.html">&larr; The Shifting Trenches of Language Intelligence</a></div>
+    </main>
+    <footer>
+        <div class="container">Built with <a href="https://github.com/max-fofanov/preprint-alert-agent">Preprint Alert Agent</a></div>
+    </footer>
+</body>
+</html>

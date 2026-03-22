@@ -44,6 +44,7 @@ I am NOT interested in:
 - Pure dataset/benchmark papers without methodological novelty
 - Papers focused solely on non-English languages (unless the method is novel)
 - Straightforward application papers with no new ideas
+- AI safety papers
 
 Prefer papers that make you think "that's clever" over papers that make you think
 "that's a lot of GPUs." Papers from strong research labs (e.g. Google, Meta, DeepMind,

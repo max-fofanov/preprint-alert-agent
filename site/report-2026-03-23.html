@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Week in Language Models: From Memory Surgery to Semantic Fingerprints</title>
+    <meta property="og:title" content="The Week in Language Models: From Memory Surgery to Semantic Fingerprints">
+    <meta property="og:description" content="Today’s papers feel like a masterclass in the art and science of building more competent, efficient, and trustworthy language models. The unifying theme? **Intelligence isn't just about scale—it's abo">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%22.9em%22%20font-size=%2290%22%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E">
+    <style>
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #353740;
+    --text-secondary: #6e6e80;
+    --bg: #fafaf9;
+    --bg-secondary: #f3f3f0;
+    --border: #e5e5e6;
+    --accent: #10a37f;
+    --link: #10a37f;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #d1d5db;
+        --text-secondary: #9ca3af;
+        --bg: #111111;
+        --bg-secondary: #1a1a1a;
+        --border: #2a2a2a;
+        --accent: #34d399;
+        --link: #34d399;
+    }
+}
+
+body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    margin-bottom: 48px;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-header a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.15s;
+}
+
+.site-nav a:hover {
+    color: var(--accent);
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Index page */
+.index-tagline {
+    color: var(--text-secondary);
+    font-size: 16px;
+    padding-bottom: 32px;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    transition: background 0.15s;
+}
+
+.report-item:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.report-item:hover {
+    background: var(--bg-secondary);
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.report-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.report-badge {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
+    letter-spacing: 0;
+    text-transform: none;
+    vertical-align: middle;
+}
+
+.report-item h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.report-item h2 a:hover {
+    color: var(--accent);
+}
+
+.report-excerpt {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Empty report (no interesting papers) */
+.report-item-empty {
+    opacity: 0.55;
+}
+
+.report-item-empty:hover {
+    background: transparent;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.report-item-empty h2 {
+    font-size: 18px;
+    font-family: inherit;
+}
+
+/* Article page */
+.article-header {
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.article-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+}
+
+.article-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-body {
+    padding-bottom: 80px;
+}
+
+.article-body h2,
+.article-body h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.article-body h2 {
+    font-size: 30px;
+    line-height: 1.25;
+}
+
+.article-body h3 {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.15s;
+}
+
+.article-body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.article-body strong {
+    font-weight: 600;
+}
+
+.article-body em {
+    font-style: italic;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin: 32px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body code {
+    font-family: 'Söhne Mono', 'Menlo', monospace;
+    font-size: 0.9em;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article-body ul,
+.article-body ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.article-body li {
+    margin-bottom: 8px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 40px 0 0;
+    transition: color 0.15s;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.article-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0 0;
+    gap: 24px;
+}
+
+.article-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    max-width: 45%;
+    transition: color 0.15s;
+}
+
+.article-nav a:hover {
+    color: var(--accent);
+}
+
+.nav-newer {
+    margin-left: auto;
+    text-align: right;
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+footer a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-title">Preprint Alert</a>
+            <nav class="site-nav">
+                <a href="https://github.com/max-fofanov/preprint-alert-agent">GitHub</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="article-header">
+            <div class="article-date">March 23, 2026</div>
+            <h1>The Week in Language Models: From Memory Surgery to Semantic Fingerprints</h1>
+        </div>
+        <div class="article-body">
+            <p>Today’s papers feel like a masterclass in the art and science of building more competent, efficient, and trustworthy language models. The unifying theme? <strong>Intelligence isn&rsquo;t just about scale—it&rsquo;s about structure, control, and understanding.</strong> From dynamic memory topologies that evolve like living organisms to methods that detect AI-fabricated tables by their statistical fingerprints, the field is moving from brute-force scaling to elegant, principled engineering of cognition.</p>
+<h2>Teaching Models to Count and Plan</h2>
+<p>Let&rsquo;s start with a seemingly simple problem: getting an LLM to follow instructions like &ldquo;write a 200-word summary.&rdquo; Anyone who&rsquo;s tried knows models struggle with precise length control. <a href="https://arxiv.org/abs/2603.19255">LARFT: Closing the Cognition-Action Gap for Length Instruction Following in Large Language Models</a> offers a clever solution: <strong>hindsight length awareness</strong>. Instead of just rewarding outputs that hit the target length, LARFT makes the model <em>retrospectively recognize and predict the actual length</em> of its own generation within a reinforcement learning framework. This dual-task setup—generating to meet a constraint and then correctly identifying what it produced—closes the &ldquo;cognition-action gap&rdquo; by aligning the model&rsquo;s internal representation of length with its generative actions. The result? A +20.92 average improvement on length instruction benchmarks across four base models, with minimal impact on general capabilities. This principle could extend beyond length to other attributes like formality or sentiment, shifting from &ldquo;enforcing constraints&rdquo; to &ldquo;building internal awareness.&rdquo;</p>
+<p>Speaking of planning, what happens when you need to solve complex routing problems described in plain English? <a href="https://arxiv.org/abs/2603.19257">Constraint-aware Path Planning from Natural Language Instructions Using Large Language Models</a> demonstrates that LLMs can function as both natural language interpreters and iterative combinatorial optimizers. The framework uses the LLM to match descriptions to problem templates or, for novel constraints, autonomously constructs formulations through few-shot learning. Then, in a genetic-algorithm-like process, it generates candidate solutions, verifies them against constraints, and refines through iterative rounds. This turns LLMs into &ldquo;universal optimizers&rdquo; for combinatorial problems—accessible to non-experts and adaptable to rapidly changing real-world requirements.</p>
+<h2>The Architecture of Thought</h2>
+<p>Beneath all these capabilities lies fundamental architecture. In a fascinating theoretical contribution, <a href="https://arxiv.org/abs/2603.19272">Transformers are Stateless Differentiable Neural Computers</a> formally demonstrates that a causal Transformer layer is mathematically equivalent to a stateless Differentiable Neural Computer (sDNC). This provides a unified memory-centric interpretation: the key-value matrices form a write-once external memory, and attention becomes content-based reading from that memory. Multi-head attention corresponds to parallel read heads. This isn&rsquo;t just an analogy—it&rsquo;s a rigorous equivalence that bridges historically distinct paradigms and offers a principled computational framework for understanding Transformers as differentiable memory systems.</p>
+<p>But what happens when we push these memory systems to their limits? <a href="https://arxiv.org/abs/2603.19595">All-Mem: Agentic Lifelong Memory via Dynamic Topology Evolution</a> introduces a revolutionary approach where memory isn&rsquo;t a flat list but a dynamic topology that evolves through explicit, non-destructive edits (SPLIT, MERGE, UPDATE). Periodically, an LLM &ldquo;diagnoser&rdquo; analyzes the memory graph and proposes structured changes to improve organization. The LLM becomes a <em>memory surgeon</em>, performing topology operations to keep the memory bank organized and retrievable over very long periods without context window inflation. This turns memory from a storage problem into a dynamic graph maintenance problem, enabling sustained retrieval quality over months or years.</p>
+<h2>The Mechanics of Reasoning</h2>
+<p>How do models actually reason? <a href="https://arxiv.org/abs/2603.19262">The {\alpha}-Law of Observable Belief Revision in Large Language Model Inference</a> discovers a beautiful mathematical regularity: LLM belief updates follow a simple geometric process where the model combines prior beliefs and new evidence with a model-specific exponent α. Across GPT-5.2, Claude Sonnet 4, and Llama-3.3-70B on nearly 5,000 problems, α is remarkably close to 1—the Bayesian ideal. Even more intriguing: α <em>decreases</em> over successive revision steps, pushing the system toward stability. This provides both a diagnostic utility (monitoring α drifts signals unreliable belief updates) and a mathematical explanation for why techniques like chain-of-thought often improve reliability.</p>
+<p>But does all this reasoning actually help? <a href="https://arxiv.org/abs/2603.19558">TextReasoningBench: Does Reasoning Really Improve Text Classification in Large Language Models?</a> delivers a reality check. Their systematic evaluation shows that for text classification, complex reasoning methods (Tree-of-Thoughts, Graph-of-Thoughts) often fail to outperform simple baselines while increasing token consumption by <strong>10x-100x</strong>. Only moderate strategies like chain-of-thought show consistent but small gains (+1-3%). The paper introduces cost-aware metrics that shift the question from &ldquo;does it work?&rdquo; to &ldquo;is it worth it?&rdquo;—crucial for real-world deployment where cost and latency matter.</p>
+<h2>Efficiency Through Ingenuity</h2>
+<p>Efficiency breakthroughs abound this week, starting at the most fundamental level: tokenization. <a href="https://arxiv.org/abs/2603.19261">Significance-Gain Pair Encoding for LLMs: A Statistical Alternative to Frequency-Based Subword Merging</a> challenges a 30-year-old heuristic by replacing raw frequency with a statistically grounded scoring function that considers both <em>cohesion</em> (measured via z-statistic) and <em>gain</em> (compression benefit). This simple drop-in replacement for standard BPE reduces validation perplexity by ~13% on WikiText-103, demonstrating that better linguistic units can be discovered without sacrificing compression.</p>
+<p>For long contexts, <a href="https://arxiv.org/abs/2603.19635">BEAVER: A Training-Free Hierarchical Prompt Compression Method via Structure-Aware Page Selection</a> introduces a brilliant approach: treat long contexts as a 2D page tensor via logical segmentation, then perform dual-path pooling (weighted average + max) at the page level. By selecting entire &ldquo;pages&rdquo; based on hybrid semantic-lexical scoring rather than token-by-token pruning, BEAVER reduces latency by <strong>26.4x</strong> on 128k contexts while maintaining high fidelity in multi-needle retrieval.</p>
+<p><a href="https://arxiv.org/abs/2603.19733">PoC: Performance-oriented Context Compression for Large Language Models via Performance Prediction</a> reframes compression entirely: instead of specifying a target compression ratio, specify an acceptable performance floor. A lightweight performance predictor then determines the most aggressive compression that still meets the constraint. The context-aware variant, which considers the inherent compressibility of specific inputs, achieves lower prediction error and superior overall performance.</p>
+<h2>The Science of Trust</h2>
+<p>As models become more capable, ensuring their trustworthiness becomes paramount. <a href="https://arxiv.org/abs/2603.19532">EvidenceRL: Reinforcing Evidence Consistency for Trustworthy Language Models</a> introduces an RL framework with a &ldquo;focus-then-verify&rdquo; grounding reward that uses targeted natural language inference against individual evidence sources. For cardiac diagnosis, it reduces hallucinations nearly <strong>5×</strong> and increases evidence-supported diagnoses from 31.8% to 61.6%. This provides a scalable method to make LLMs more trustworthy in high-stakes domains where evidence fidelity is critical.</p>
+<p>For detecting AI-generated content, <a href="https://arxiv.org/abs/2603.19772">TAB-AUDIT: Detecting AI-Fabricated Scientific Tables via Multi-View Likelihood Mismatch</a> takes a novel approach: analyze the perplexity gap between a table&rsquo;s structural skeleton and its numerical content. The hypothesis is that generative models may produce plausible-looking structures but struggle with statistically coherent numerical data. Their method achieves near-perfect in-domain detection (0.987 AUROC) and strong out-of-domain generalization, validating that AI-generated scientific tables contain detectable statistical dissonance.</p>
+<h2>Agents That Understand and Adapt</h2>
+<p>The agent frontier is rapidly advancing. <a href="https://arxiv.org/abs/2603.20017">RouterKGQA: Specialized&ndash;General Model Routing for Constraint-Aware Knowledge Graph Question Answering</a> demonstrates elegant model orchestration: a small, fine-tuned specialist handles most questions, and only when its output fails reachability verification does the system invoke an expensive generalist for repair. This achieves state-of-the-art performance with only <strong>~1.15 LLM calls per question</strong>—a <strong>~10x reduction</strong> compared to pure agent-based methods.</p>
+<p><a href="https://arxiv.org/abs/2602.07451">DLLM Agent: See Farther, Run Faster</a> makes the case for diffusion LLMs as reasoning backbones. In controlled comparisons, DLLM agents achieve comparable accuracy with <strong>≥30% end-to-end speedup on average</strong> (up to <strong>8× faster</strong> in some cases) due to fewer tool calls and planning steps. The key insight: diffusion backbones exhibit different attention patterns, suggesting stronger global coordination in planning.</p>
+<h2>The Human-Machine Interface</h2>
+<p>Finally, how do we understand what models are actually doing? <a href="https://arxiv.org/abs/2511.06571">Rep2Text: Decoding Full Text from a Single LLM Token Representation</a> shows that the last-token representation isn&rsquo;t just a classification vector—it&rsquo;s a <strong>lossy semantic summary</strong> of the entire sequence. Their framework achieves ~50% token-level recovery for 16-token sequences, revealing how much high-level meaning is compressed into a single vector.</p>
+<p><a href="https://arxiv.org/abs/2603.19849">Semantic Delta: An Interpretable Signal Differentiating Human and LLMs Dialogue</a> offers a lightweight metric: the difference in normalized intensity scores between the top two semantic categories identified by the Empath lexicon. LLM outputs exhibit stronger thematic concentration (higher Δ) than human discourse, which shows more balanced semantic spread. This captures a &ldquo;thematic bottleneck&rdquo; in LLMs—while humans naturally blend topics, LLMs tend to over-optimize for coherence around a single dominant theme.</p>
+<h2>The Takeaway</h2>
+<p>This week&rsquo;s papers collectively demonstrate a maturing field. We&rsquo;re moving beyond simply scaling models to understanding and engineering their internal processes—how they represent information, update beliefs, plan actions, and ground their outputs. The most exciting developments aren&rsquo;t about bigger models, but about <em>smarter</em> ones: models that know what they&rsquo;re saying, why they&rsquo;re saying it, and how to say it efficiently and reliably. From memory that evolves like living tissue to reasoning that follows mathematical laws, we&rsquo;re witnessing the emergence of truly engineered intelligence.</p>
+        </div>
+        <a href="index.html" class="back-link">&larr; All reports</a>
+        <div class="article-nav"><a class="nav-older" href="report-2026-03-20.html">&larr; No interesting papers found today</a></div>
+    </main>
+    <footer>
+        <div class="container">Built with <a href="https://github.com/max-fofanov/preprint-alert-agent">Preprint Alert Agent</a></div>
+    </footer>
+</body>
+</html>

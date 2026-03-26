@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Quiet Revolution: When Language Models Learn to Think and Act</title>
+    <meta property="og:title" content="The Quiet Revolution: When Language Models Learn to Think and Act">
+    <meta property="og:description" content="Today's arXiv drop reveals something subtle but profound: we're watching language models evolve from pattern matchers into something that looks suspiciously like reasoning agents. The papers aren't ju">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%22.9em%22%20font-size=%2290%22%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E">
+    <style>
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #353740;
+    --text-secondary: #6e6e80;
+    --bg: #fafaf9;
+    --bg-secondary: #f3f3f0;
+    --border: #e5e5e6;
+    --accent: #10a37f;
+    --link: #10a37f;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #d1d5db;
+        --text-secondary: #9ca3af;
+        --bg: #111111;
+        --bg-secondary: #1a1a1a;
+        --border: #2a2a2a;
+        --accent: #34d399;
+        --link: #34d399;
+    }
+}
+
+body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    margin-bottom: 48px;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-header a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.15s;
+}
+
+.site-nav a:hover {
+    color: var(--accent);
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Index page */
+.index-tagline {
+    color: var(--text-secondary);
+    font-size: 16px;
+    padding-bottom: 32px;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    transition: background 0.15s;
+}
+
+.report-item:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.report-item:hover {
+    background: var(--bg-secondary);
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.report-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.report-badge {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
+    letter-spacing: 0;
+    text-transform: none;
+    vertical-align: middle;
+}
+
+.report-item h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.report-item h2 a:hover {
+    color: var(--accent);
+}
+
+.report-excerpt {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Empty report (no interesting papers) */
+.report-item-empty {
+    opacity: 0.55;
+}
+
+.report-item-empty:hover {
+    background: transparent;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.report-item-empty h2 {
+    font-size: 18px;
+    font-family: inherit;
+}
+
+/* Article page */
+.article-header {
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.article-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+}
+
+.article-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-body {
+    padding-bottom: 80px;
+}
+
+.article-body h2,
+.article-body h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.article-body h2 {
+    font-size: 30px;
+    line-height: 1.25;
+}
+
+.article-body h3 {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.15s;
+}
+
+.article-body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.article-body strong {
+    font-weight: 600;
+}
+
+.article-body em {
+    font-style: italic;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin: 32px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body code {
+    font-family: 'Söhne Mono', 'Menlo', monospace;
+    font-size: 0.9em;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article-body ul,
+.article-body ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.article-body li {
+    margin-bottom: 8px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 40px 0 0;
+    transition: color 0.15s;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.article-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0 0;
+    gap: 24px;
+}
+
+.article-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    max-width: 45%;
+    transition: color 0.15s;
+}
+
+.article-nav a:hover {
+    color: var(--accent);
+}
+
+.nav-newer {
+    margin-left: auto;
+    text-align: right;
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+footer a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-title">Preprint Alert</a>
+            <nav class="site-nav">
+                <a href="https://github.com/max-fofanov/preprint-alert-agent">GitHub</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="article-header">
+            <div class="article-date">March 26, 2026</div>
+            <h1>The Quiet Revolution: When Language Models Learn to Think and Act</h1>
+        </div>
+        <div class="article-body">
+            <p>Today&rsquo;s arXiv drop reveals something subtle but profound: we&rsquo;re watching language models evolve from pattern matchers into something that looks suspiciously like reasoning agents. The papers aren&rsquo;t just about bigger models or better benchmarks—they&rsquo;re about fundamentally new ways for these systems to interact with the world, with themselves, and with information at scales we previously thought impossible.</p>
+<h2>Beyond the Mask: A New Diffusion Dialect</h2>
+<p>Let&rsquo;s start with what might seem like a technical detail but is actually a paradigm shift in how we generate text. <a href="https://arxiv.org/abs/2603.23507">Beyond Masks: Efficient, Flexible Diffusion Language Models via Deletion-Insertion Processes</a> does something clever: it stops treating text generation as a game of fill-in-the-blank and starts treating it like editing.</p>
+<p>Most diffusion models for language work by masking tokens and then filling them in—think Mad Libs with transformers. The DID (Deletion-Insertion Diffusion) approach asks: what if instead of masking, we just deleted tokens we weren&rsquo;t sure about and inserted new ones where they make sense? This sounds simple until you realize it requires solving novel subsequence counting problems and implementing parallelized dynamic programming just to make training tractable.</p>
+<p>The magic here is self-correction. When you generate left-to-right, you&rsquo;re stuck with your earlier choices. When you mask and unmask, you&rsquo;re still constrained by your mask pattern. But with deletion-insertion, the model can say &ldquo;wait, that word I placed two positions back should actually go here instead&rdquo; and dynamically adjust. It&rsquo;s a small change with profound implications: we&rsquo;re moving from rigid generation protocols to fluid, self-correcting composition.</p>
+<h2>The Memory Frontier: 100 Million Tokens and Counting</h2>
+<p>If DID shows us how to generate text more intelligently, <a href="https://arxiv.org/abs/2603.23516">MSA: Memory Sparse Attention for Efficient End-to-End Memory Model Scaling to 100M Tokens</a> shows us how to think across previously unimaginable context lengths. The numbers are staggering—100 million tokens means you could feed an entire library into a model and have it reason across all of it simultaneously.</p>
+<p>The breakthrough isn&rsquo;t just scale; it&rsquo;s how they achieve it. Instead of trying to make transformers attend to everything (which scales quadratically and quickly becomes impossible), MSA uses a two-stage approach: first, a lightweight router scans millions of documents to find the few hundred that matter; then, the actual model attends only to those selected documents. Each document lives in its own positional embedding space, preventing the chaos that would ensue if you tried to give absolute positions across 100 million tokens.</p>
+<p>The practical implications are wild. You could have a model that contains your company&rsquo;s entire documentation, every customer support ticket, all relevant research papers—and it could reason across all of it without retrieval latency. The performance drop when scaling from 16K to 100M tokens? Less than 9%. That&rsquo;s not just incremental progress—that&rsquo;s breaking through what many thought was a fundamental limitation.</p>
+<h2>When Retrieval Becomes Reasoning</h2>
+<p>Speaking of retrieval, we&rsquo;re seeing a fascinating evolution: retrieval is no longer just fetching documents; it&rsquo;s becoming an integral part of the reasoning process itself. <a href="https://arxiv.org/abs/2603.23512">S-Path-RAG: Semantic-Aware Shortest-Path Retrieval Augmented Generation for Multi-Hop Knowledge Graph Question Answering</a> embodies this shift beautifully.</p>
+<p>Traditional retrieval for knowledge graphs usually picks either semantic similarity (&ldquo;these words are similar&rdquo;) or graph distance (&ldquo;these nodes are close&rdquo;). S-Path-RAG says: why not both? Their hybrid weighting function balances structural cost, semantic dissimilarity, and relation priors to find paths that are both semantically relevant and topologically sound.</p>
+<p>But the really clever part is the &ldquo;Neural-Socratic Graph Dialogue.&rdquo; When the system is uncertain, it doesn&rsquo;t just guess—it generates diagnostic messages that trigger targeted graph updates, then retrieves again. This creates a dynamic retrieval-reasoning loop where each retrieval informs the next reasoning step, and each reasoning step informs the next retrieval. The differentiable path selection (using Gumbel-softmax to allow gradient flow through discrete choices) and soft path injection (via cross-attention with interpretability enforcement) complete a remarkably elegant system.</p>
+<h2>The Verification Problem Gets Real</h2>
+<p>Of course, all this reasoning and retrieval is useless if we can&rsquo;t trust the outputs. <a href="https://arxiv.org/abs/2603.23508">Fast and Faithful: Real-Time Verification for Long-Document Retrieval-Augmented Generation Systems</a> tackles perhaps the most practical problem in production RAG systems: how do you verify that an answer is actually supported by a 32K-token document without spending minutes and dollars on LLM-as-a-judge?</p>
+<p>Their insight is subtle but important: the problem after you scale context windows (using techniques like YaRN) isn&rsquo;t architectural—it&rsquo;s optimization. Standard masked language modeling objectives provide weak signals for long-range attention because models can &ldquo;cheat&rdquo; using nearby tokens. Their solution? &ldquo;Retrieval-aware masking&rdquo; that forces the model to attend across the entire document by using long-range copy and anchor-reference patterns.</p>
+<p>What I love about this work is its practicality. They train with a standard cross-entropy loss (not imbalanced ones that cause false alarms), match training hallucination rates to production, use Elastic Weight Consolidation to prevent catastrophic forgetting, and—most ingeniously—add configurable early-exit adapters that let you trade accuracy for speed dynamically. This isn&rsquo;t just research; this is engineering for the real world.</p>
+<h2>From Embeddings to Autonomous Analysis</h2>
+<p>Finally, [Cluster-R1: Large Reasoning Models Are Instruction</p>
+        </div>
+        <a href="index.html" class="back-link">&larr; All reports</a>
+        <div class="article-nav"><a class="nav-older" href="report-2026-03-25.html">&larr; The Clever Tricks Making LLMs More Honest, Efficie</a></div>
+    </main>
+    <footer>
+        <div class="container">Built with <a href="https://github.com/max-fofanov/preprint-alert-agent">Preprint Alert Agent</a></div>
+    </footer>
+</body>
+</html>

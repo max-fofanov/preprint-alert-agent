@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Today's Deep Dive: Pruning, Pragmatics, and the Physics of Belief in Language Models</title>
+    <meta property="og:title" content="Today's Deep Dive: Pruning, Pragmatics, and the Physics of Belief in Language Models">
+    <meta property="og:description" content="Every day on arXiv, researchers peel back layers of our artificial language engines, revealing surprising new mechanics, clever optimizations, and fundamental limitations. Today's harvest is particula">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%22.9em%22%20font-size=%2290%22%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E">
+    <style>
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #353740;
+    --text-secondary: #6e6e80;
+    --bg: #fafaf9;
+    --bg-secondary: #f3f3f0;
+    --border: #e5e5e6;
+    --accent: #10a37f;
+    --link: #10a37f;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #d1d5db;
+        --text-secondary: #9ca3af;
+        --bg: #111111;
+        --bg-secondary: #1a1a1a;
+        --border: #2a2a2a;
+        --accent: #34d399;
+        --link: #34d399;
+    }
+}
+
+body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    margin-bottom: 48px;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-header a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.15s;
+}
+
+.site-nav a:hover {
+    color: var(--accent);
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Index page */
+.index-tagline {
+    color: var(--text-secondary);
+    font-size: 16px;
+    padding-bottom: 32px;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    transition: background 0.15s;
+}
+
+.report-item:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.report-item:hover {
+    background: var(--bg-secondary);
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.report-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.report-badge {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
+    letter-spacing: 0;
+    text-transform: none;
+    vertical-align: middle;
+}
+
+.report-item h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.report-item h2 a:hover {
+    color: var(--accent);
+}
+
+.report-excerpt {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Empty report (no interesting papers) */
+.report-item-empty {
+    opacity: 0.55;
+}
+
+.report-item-empty:hover {
+    background: transparent;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.report-item-empty h2 {
+    font-size: 18px;
+    font-family: inherit;
+}
+
+/* Article page */
+.article-header {
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.article-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+}
+
+.article-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-body {
+    padding-bottom: 80px;
+}
+
+.article-body h2,
+.article-body h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.article-body h2 {
+    font-size: 30px;
+    line-height: 1.25;
+}
+
+.article-body h3 {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.15s;
+}
+
+.article-body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.article-body strong {
+    font-weight: 600;
+}
+
+.article-body em {
+    font-style: italic;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin: 32px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body code {
+    font-family: 'Söhne Mono', 'Menlo', monospace;
+    font-size: 0.9em;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article-body ul,
+.article-body ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.article-body li {
+    margin-bottom: 8px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 40px 0 0;
+    transition: color 0.15s;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.article-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0 0;
+    gap: 24px;
+}
+
+.article-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    max-width: 45%;
+    transition: color 0.15s;
+}
+
+.article-nav a:hover {
+    color: var(--accent);
+}
+
+.nav-newer {
+    margin-left: auto;
+    text-align: right;
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+footer a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-title">Preprint Alert</a>
+            <nav class="site-nav">
+                <a href="https://github.com/max-fofanov/preprint-alert-agent">GitHub</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="article-header">
+            <div class="article-date">March 27, 2026</div>
+            <h1>Today's Deep Dive: Pruning, Pragmatics, and the Physics of Belief in Language Models</h1>
+        </div>
+        <div class="article-body">
+            <p>Every day on arXiv, researchers peel back layers of our artificial language engines, revealing surprising new mechanics, clever optimizations, and fundamental limitations. Today&rsquo;s harvest is particularly rich: papers that explain why pruning works, map the social geography of instructions, probe the physics of internal belief, and turn diffusion models into self-speculating speed demons. Let&rsquo;s explore the narrative threads connecting them.</p>
+<h2>The Physics of Pruning: Why Cutting Neurons Can Destroy Worlds</h2>
+<p>Two papers today tackle pruning from radically different angles, painting a complete picture of its perils and promises. First, <a href="https://arxiv.org/abs/2603.24652">Demystifying When Pruning Works via Representation Hierarchies</a> provides a beautiful, mechanistic explanation for a long-standing puzzle: why can we aggressively prune models for tasks like retrieval and multiple-choice QA, yet watch them collapse catastrophically when asked to generate text?</p>
+<p>The authors decompose the LLM&rsquo;s computation into three sequential spaces: embedding, logit, and probability. Their key insight is that the softmax nonlinearity acts as an <strong>error amplifier</strong>. A small pruning-induced perturbation in the logit space gets magnified into a large shift in the probability distribution over the massive vocabulary. In autoregressive generation, this error is fed back as input, causing deviations to compound across time steps like a snowball rolling downhill. For non-generative tasks—where the model only needs to make ordinal comparisons within a restricted subspace (e.g., cosine similarity for retrieval)—these amplified probability errors are irrelevant. The result is a principled guideline: prune aggressively for embedding-based pipelines; avoid it for generative models unless you can stabilize the probability-space dynamics.</p>
+<p>The second pruning paper, <a href="https://arxiv.org/abs/2603.24840">Prune as You Generate: Online Rollout Pruning for Faster and Better RLVR</a>, takes this concept and turns it into an active lever for improving training, not just efficiency. Their method, ARRoL, trains a lightweight &ldquo;quality head&rdquo; during generation to predict the success probability of partial rollouts in Reinforcement Learning from Verbal Feedback (RLVR). It then prunes low-value rollouts early, while strategically preserving a balanced mix of correct and incorrect samples to maintain optimal learning signals.</p>
+<p>Here, pruning isn&rsquo;t just a static compression technique; it&rsquo;s a dynamic, inference-time intervention that shapes the reward distribution. The &ldquo;cool&rdquo; insight is that by pruning to maintain group balance (a positive sample ratio near 0.5), they simultaneously accelerate training (up to 1.7× speedup) and improve final accuracy (gains of +2.30 to +2.99). It turns a computational bottleneck into a training advantage, demonstrating that smart truncation can be generative.</p>
+<h2>The Social Life of Instructions and the Geometry of Confidence</h2>
+<p>Moving from the model&rsquo;s internals to its interface with the world, <a href="https://arxiv.org/abs/2603.25015">Imperative Interference: Social Register Shapes Instruction Topology in Large Language Models</a> reveals a fascinating cultural dimension to system prompts. The authors treat instructions not just as semantic content, but as <em>social acts</em>. Using covering arrays to systematically ablate instruction blocks across languages, they discover that the <em>topology</em> of instruction cooperation or competition <strong>flips</strong> depending on linguistic register.</p>
+<p>In English, certain imperative instruction pairs might cooperate; in Spanish, the same pairs compete. The mechanism is social pragmatics: the imperative mood (&ldquo;NEVER do X&rdquo;) carries different obligatory force across cultures learned from training data. A brilliant intervention shows rewriting imperative blocks into declarative statements (&ldquo;X: disabled&rdquo;) reduces cross-linguistic variance by <strong>81%</strong> and can flip Spanish instruction topology from competitive to cooperative. This implies that constitutional AI principles written in imperative mood may create <em>language-dependent alignment</em>—a major concern for multilingual safety.</p>
+<p>Meanwhile, <a href="https://arxiv.org/abs/2603.25052">Closing the Confidence-Faithfulness Gap in Large Language Models</a> digs into the internal geometry of a related problem: why LLMs are so poorly calibrated. Using mechanistic interpretability, they discover that an LLM&rsquo;s internal estimate of its accuracy (gold calibration) and its expressed verbal confidence are encoded as <strong>orthogonal, linear directions</strong> in the residual stream. This separation is the root cause of miscalibration.</p>
+<p>They identify a specific exacerbating mechanism: the <strong>&ldquo;Reasoning Contamination Effect.&rdquo;</strong> When prompted to reason and verbalize confidence simultaneously, the reasoning process contaminates and disrupts the confidence direction. Their solution is a two-stage adaptive steering pipeline: read the internal accuracy estimate via a linear probe, then steer the verbalized confidence output by scaling a contrastive confidence vector. This inference-time fix, derived from a clean mechanistic understanding, shows calibration and confidence are separate, manipulable features—opening doors for more transparent LLMs.</p>
+<p>This theme of internal state is further explored by <a href="https://arxiv.org/abs/2603.25187">Probing the Lack of Stable Internal Beliefs in LLMs</a>, which introduces a novel paradigm to measure <em>implicit consistency</em>. In a 20-questions-style game, an LLM secretly selects a target and must stick to it while answering questions, without ever being reminded. Using &ldquo;branch-based&rdquo; probing to map the hidden belief state to a probability distribution over indices, they find that even powerful models show high drift rates—their &ldquo;secret&rdquo; changes frequently during the dialogue. There&rsquo;s a dissociation: models can maintain <em>external consistency</em> (answers remain logically coherent) while failing <em>internal consistency</em> (the probed target drifts). This reveals LLMs are not robust simulators of agents with persistent internal goals, a critical flaw for applications requiring consistent personas.</p>
+<h2>Efficiency Breakthroughs: From Tokenization Paradigms to Self-Speculation</h2>
+<p>On the efficiency frontier, several papers today offer genuine paradigm shifts, not incremental gains.</p>
+<p><a href="https://arxiv.org/abs/2603.25309">Separate Before You Compress: The WWHO Tokenization Architecture</a> introduces a linguistically-informed, three-layer tokenizer that decouples rule-based segmentation from statistical compression. Its core is <strong>Syllable-aware Grapheme Pair Encoding (SGPE)</strong>, which applies BPE-like merging to linguistically valid syllables (identified by a deterministic finite automaton called LinguisTrie) rather than raw bytes. For languages like Sinhala, this achieves a <strong>61.7% reduction</strong> in tokens compared to OpenAI&rsquo;s o200k_base and provides up to <strong>4.38× more usable context</strong>. This mitigates the &ldquo;Token Tax&rdquo; on Global South languages, making LLM inference cheaper and more efficient for over a billion Abugida script users.</p>
+<p><a href="https://arxiv.org/abs/2603.25702">S2D2: Fast Decoding for Diffusion LLMs via Training-Free Self-Speculation</a> offers a brilliant speedup trick for the emerging class of block-diffusion language models. Their key insight: reducing the block size to 1 turns the diffusion model into an autoregressive model. They use the <strong>same pretrained model as both drafter and verifier</strong>, with clever masking (&ldquo;2L trick&rdquo;) to compute all verifier probabilities in one forward pass. This training-free self-speculative decoding yields up to <strong>4.7× faster</strong> decoding than autoregressive baselines while improving accuracy. It&rsquo;s a clever hybrid strategy that creates an efficient decoding trajectory.</p>
+<p>Another compression leap comes from <a href="https://arxiv.org/abs/2603.25340">Large Language Model as Token Compressor and Decompressor</a>, which turns a standard LLM into an autoencoder that learns a <strong>discrete, variable-length internal language (Z-tokens)</strong>. Unlike fixed-length continuous embeddings, this method generates Z-tokens autoregressively, enabling dynamic compression where semantically dense regions get more tokens. It achieves up to <strong>18× token reduction</strong> while preserving reconstruction fidelity, acting as both a prompt compressor and an abstract reasoning engine.</p>
+<h2>Agents, Benchmarks, and the Limits of Coordination</h2>
+<p>The theme of agentic capabilities and evaluation is strong today, with papers probing how far our models can really go.</p>
+<p><a href="https://arxiv.org/abs/2603.25253">MolQuest: A Benchmark for Agentic Evaluation of Abductive Reasoning in Chemical Structure Elucidation</a> moves beyond static QA to a multi-turn, interactive task where LLMs must act as autonomous agents, strategically planning experiments (requesting specific spectral data), integrating evidence, and iteratively refining hypotheses. Even the best models (Gemini 3 family) only achieve ~50% accuracy, exposing a critical gap in strategic scientific reasoning. The dynamic paradigm acts as a diagnostic: some models (e.g., Qwen3 Max) improve with interaction (+10.56%), while others (e.g., Kimi K2 Thinking) degrade (-9.25%), revealing deficits in planning.</p>
+<p><a href="https://arxiv.org/abs/2603.25268">CRAFT: Grounded Multi-Agent Coordination Under Partial Information</a> introduces a rigorous benchmark for pragmatic communication under strict partial observability. Three &ldquo;Directors&rdquo; with complementary, incomplete views of a 3D structure must coordinate via natural language so a &ldquo;Builder&rdquo; can reconstruct it. The surprising finding: <strong>stronger reasoning ability does not reliably translate to better coordination.</strong> Smaller open-weight models often matched or outperformed frontier systems like GPT-4 and Claude 3. This exposes a group-level failure mode—even if each director avoids individual errors, the collective output can still fail. Multi-agent coordination remains a fundamentally unsolved challenge requiring emergent group-level pragmatics.</p>
+<p><a href="https://arxiv.org/abs/2603.24755">SlopCodeBench: Benchmarking How Coding Agents Degrade Over Long-Horizon Iterative Tasks</a> shifts the focus from single-shot correctness to iterative degradation. Their benchmark forces agents to extend their own prior code under evolving specifications, simulating real-world software development. The results are stark: no agent solves any problem end-to-end; code quality steadily declines (structural erosion increases in 80% of trajectories). Prompt interventions improve the starting point but <strong>do not halt the degradation process</strong>, showing current AI coding agents lack the design discipline for sustainable software development, rapidly accumulating technical debt.</p>
+<h2>Reasoning Over Distributions and the Science of Construction</h2>
+<p>Two papers reimagine how models should reason about uncertainty and physical reality.</p>
+<p><a href="https://arxiv.org/abs/2603.24844">Reaching Beyond the Mode: RL for Distributional Reasoning in Language Models</a> introduces a novel multi-answer RL objective that trains a model to generate a <em>set</em> of K diverse and plausible answers in a single forward pass. This internalizes inference-time search directly into the policy. It achieves superior coverage and diversity with <strong>major efficiency gains</strong> (significantly fewer tokens than repeated sampling), particularly excelling on tasks like coding where many valid solutions exist. It shifts the paradigm from generating a single &ldquo;best&rdquo; answer to natively reasoning over distributions.</p>
+<p><a href="https://arxiv.org/abs/2603.24866">DreamHouse: A Benchmark for Physical Generative Reasoning</a> evaluates Vision-Language Models on their ability to <em>generate</em> physically valid structures, not just perceive them. Grounded in residential timber-frame construction with codified engineering rules, it tests whether models can produce buildable artifacts from scratch. State-of-the-art VLMs perform poorly (best joint pass rate: 7.1%). Performance on DreamHouse does not correlate with standard leaderboards, proving <strong>physical generative reasoning is a distinct, underdeveloped capability</strong>—current VLMs are perceptually fluent but far from being competent &ldquo;builders.&rdquo;</p>
+<h2>The Takeaway: A Day of Clever Mechanics and Foundational Gaps</h2>
+<p>Today&rsquo;s papers collectively highlight a move towards understanding and manipulating the <em>internal mechanics</em> of language models—their representation hierarchies, geometric confidence directions, and social interpretation of instructions. They also showcase clever, paradigm-shifting efficiencies: linguistically-aware tokenization, self-speculative decoding, and distributional RL.</p>
+<p>Yet the benchmarks reveal persistent, fundamental gaps: in strategic scientific reasoning, multi-agent coordination, iterative code design, and physical generative construction. The path forward seems to require not just scaling, but new architectures and training approaches that bake in persistence, pragmatics, and physics from the start.</p>
+<p>The most exciting trend is the blending of deep mechanistic insight with lightweight, inference-time interventions. From steering confidence vectors to pruning for balanced learning, researchers are finding ways to guide these colossal models without retraining them—a promising direction for making LLMs more reliable, efficient, and aligned with our complex world.</p>
+        </div>
+        <a href="index.html" class="back-link">&larr; All reports</a>
+        <div class="article-nav"><a class="nav-older" href="report-2026-03-26.html">&larr; The Quiet Revolution: When Language Models Learn t</a></div>
+    </main>
+    <footer>
+        <div class="container">Built with <a href="https://github.com/max-fofanov/preprint-alert-agent">Preprint Alert Agent</a></div>
+    </footer>
+</body>
+</html>

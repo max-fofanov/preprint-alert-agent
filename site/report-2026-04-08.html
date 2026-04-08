@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Geometry of Thought: How Today's Research Reveals What's Actually Happening Inside LLMs</title>
+    <meta property="og:title" content="The Geometry of Thought: How Today's Research Reveals What's Actually Happening Inside LLMs">
+    <meta property="og:description" content="Welcome to another day in the whirlwind world of language model research. Today's papers reveal something fascinating: we're moving beyond surface-level performance metrics into the rich internal worl">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%22.9em%22%20font-size=%2290%22%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E">
+    <style>
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #353740;
+    --text-secondary: #6e6e80;
+    --bg: #fafaf9;
+    --bg-secondary: #f3f3f0;
+    --border: #e5e5e6;
+    --accent: #10a37f;
+    --link: #10a37f;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #d1d5db;
+        --text-secondary: #9ca3af;
+        --bg: #111111;
+        --bg-secondary: #1a1a1a;
+        --border: #2a2a2a;
+        --accent: #34d399;
+        --link: #34d399;
+    }
+}
+
+body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    margin-bottom: 48px;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-header a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.15s;
+}
+
+.site-nav a:hover {
+    color: var(--accent);
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Index page */
+.index-tagline {
+    color: var(--text-secondary);
+    font-size: 16px;
+    padding-bottom: 32px;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    transition: background 0.15s;
+}
+
+.report-item:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.report-item:hover {
+    background: var(--bg-secondary);
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.report-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.report-badge {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
+    letter-spacing: 0;
+    text-transform: none;
+    vertical-align: middle;
+}
+
+.report-item h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.report-item h2 a:hover {
+    color: var(--accent);
+}
+
+.report-excerpt {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Empty report (no interesting papers) */
+.report-item-empty {
+    opacity: 0.55;
+}
+
+.report-item-empty:hover {
+    background: transparent;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.report-item-empty h2 {
+    font-size: 18px;
+    font-family: inherit;
+}
+
+/* Article page */
+.article-header {
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.article-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+}
+
+.article-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-body {
+    padding-bottom: 80px;
+}
+
+.article-body h2,
+.article-body h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.article-body h2 {
+    font-size: 30px;
+    line-height: 1.25;
+}
+
+.article-body h3 {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.15s;
+}
+
+.article-body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.article-body strong {
+    font-weight: 600;
+}
+
+.article-body em {
+    font-style: italic;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin: 32px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body code {
+    font-family: 'Söhne Mono', 'Menlo', monospace;
+    font-size: 0.9em;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article-body ul,
+.article-body ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.article-body li {
+    margin-bottom: 8px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 40px 0 0;
+    transition: color 0.15s;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.article-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0 0;
+    gap: 24px;
+}
+
+.article-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    max-width: 45%;
+    transition: color 0.15s;
+}
+
+.article-nav a:hover {
+    color: var(--accent);
+}
+
+.nav-newer {
+    margin-left: auto;
+    text-align: right;
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+footer a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-title">Preprint Alert</a>
+            <nav class="site-nav">
+                <a href="https://github.com/max-fofanov/preprint-alert-agent">GitHub</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="article-header">
+            <div class="article-date">April 08, 2026</div>
+            <h1>The Geometry of Thought: How Today's Research Reveals What's Actually Happening Inside LLMs</h1>
+        </div>
+        <div class="article-body">
+            <p>Welcome to another day in the whirlwind world of language model research. Today&rsquo;s papers reveal something fascinating: we&rsquo;re moving beyond surface-level performance metrics into the rich internal world of models. Researchers aren&rsquo;t just asking &ldquo;how well does it work?&rdquo; but &ldquo;what&rsquo;s actually happening in there?&rdquo; The answers are revealing surprising geometric structures, clever architectural workarounds, and fundamental limitations we never properly diagnosed.</p>
+<h2>The Illusion of Understanding</h2>
+<p>Let&rsquo;s start with a paper that should give us all pause. <a href="https://arxiv.org/abs/2604.04943">The Illusion of Latent Generalization: Bi-directionality and the Reversal Curse</a> asks a simple but profound question: when bidirectional training objectives improve performance on fact reversal tasks, are models actually learning abstract relations, or just cheating cleverly?</p>
+<p>The answer is both sobering and fascinating. Using representation distance analysis and linear probing, the researchers found that models aren&rsquo;t creating unified, direction-agnostic fact representations. Instead, they&rsquo;re essentially storing a second, specialized entry for the reverse query. That&rsquo;s right—when a model trained on &ldquo;A &gt; B&rdquo; successfully answers &ldquo;B &lt; A,&rdquo; it&rsquo;s not because it understands the concept of &ldquo;greater than&rdquo; and can reverse it. It&rsquo;s because it&rsquo;s memorized a separate &ldquo;B &lt; A&rdquo; entry.</p>
+<p>This speaks to a deeper issue in how we interpret model improvements. Behavioral performance gains don&rsquo;t necessarily imply deeper conceptual understanding. An objective can &ldquo;fix&rdquo; a specific failure mode by creating complementary lookup entries rather than fostering real abstraction. As we celebrate benchmark improvements, this paper serves as a crucial reminder to check what&rsquo;s happening under the hood.</p>
+<h2>The Geometry of Reasoning</h2>
+<p>Speaking of what&rsquo;s happening under the hood, several papers today explore the literal geometry of thought within models. <a href="https://arxiv.org/abs/2604.05655">LLM Reasoning as Trajectories: Step-Specific Representation Geometry and Correctness Signals</a> reveals something beautiful: correct multi-step reasoning follows structured, low-dimensional paths in representation space. Deviations from these &ldquo;ideal trajectories&rdquo; predict errors before they happen.</p>
+<p>The researchers found they could actually steer models back onto correct reasoning paths by nudging activations toward these ideal trajectories at inference time—no retraining required. Even more fascinating, they identified a &ldquo;termination subspace&rdquo; that acts as a continuous control axis for computation length. Want a model to think longer about a problem? Steer it away from this subspace. Want it to wrap up? Steer it toward termination. This is mechanistic interpretability yielding actual control knobs.</p>
+<p>Meanwhile, <a href="https://arxiv.org/abs/2604.06086">LAG-XAI: A Lie-Inspired Affine Geometric Framework for Interpretable Paraphrasing in Transformer Latent Spaces</a> takes a completely different geometric approach. They reconceptualize paraphrasing as continuous affine transformations in embedding space—rotations, deformations, and translations on a semantic manifold.</p>
+<p>The surprising finding? Despite transformers being highly non-linear, the semantic relationship for paraphrasing can be approximated with remarkable fidelity by a simple linear operator. They discovered a stable reconfiguration angle (~27.84°) for the transformation matrix, suggesting a consistent &ldquo;semantic turning angle&rdquo; for valid paraphrases. Even more strikingly, they found near-zero deformation—paraphrasing in this space is largely an isometry, a distance-preserving transformation. This geometric insight isn&rsquo;t just beautiful mathematics; it enables cheap hallucination detection with 95.3% accuracy on HaluEval by checking if generations stay within permissible semantic corridors.</p>
+<h2>The Universal Patterns Beneath</h2>
+<p>Perhaps the most mathematically intriguing paper today bridges statistical physics and NLP. <a href="https://arxiv.org/abs/2604.05536">Turbulence-like 5/3 spectral scaling in contextual representations of language as a complex system</a> discovers something remarkable: a robust 5/3 power-law scaling in the power spectral density of contextual embedding fluctuations—the exact same scaling found in turbulent fluid flows.</p>
+<p>This isn&rsquo;t some minor statistical curiosity. The 5/3 spectrum appears consistently across four languages (Chinese, English, German, Japanese) and both human and AI-generated text, across BERT- and GPT-style models. Over 90% of embedding dimensions exhibit exponents within ±10% of 5/3. Even more striking: AI-generated text from DeepSeek-V3 exhibits the same scaling as human text, suggesting modern LLMs capture similar multiscale organizational principles.</p>
+<p>What does this mean? The 5/3 law suggests scale-free, self-similar integration of semantic information across linguistic scales, analogous to turbulent energy cascades. It provides a model-agnostic benchmark for evaluating language representations and hints at universal dynamical principles in contextual language processing. We&rsquo;re literally discovering the physics of language.</p>
+<h2>Clever Hacks and Architectural Innovations</h2>
+<p>Beyond these deep insights, today&rsquo;s papers showcase remarkable practical innovations. <a href="https://arxiv.org/abs/2604.05030">Phase-Associative Memory: Sequence Modeling in Complex Hilbert Space</a> proposes something genuinely novel: a recurrent sequence model that operates entirely in complex Hilbert space. The key innovation replaces standard real-valued vector states with complex-valued matrix states that accumulate associations via outer products of complex embeddings and retrieve via conjugate inner products.</p>
+<p>Why complex numbers? The paper draws a deep analogy between quantum contextuality and semantic interpretation, proposing that language meaning is fundamentally non-separable and context-dependent—making complex numbers with phase interference a more natural computational basis than real vectors. On WikiText-103, this approach achieves validation perplexity 30.0 with ~100M parameters, within ~10% of a matched transformer&rsquo;s 27.1. This demonstrates that complex-valued recurrent models can compete with transformers, challenging the dominance of real-valued, attention-based architectures.</p>
+<p>Then there&rsquo;s <a href="https://arxiv.org/abs/2604.05158">Just Pass Twice: Efficient Token Classification with LLMs for Zero-Shot NER</a>, which solves a fundamental limitation of causal LLMs with a beautifully simple trick. Causal models struggle with token classification because they can&rsquo;t see future context—disambiguating &ldquo;Paris&rdquo; as a city versus an album requires seeing what comes later. JPT&rsquo;s solution? Concatenate the input sequence to itself.</p>
+<p>That&rsquo;s it. Tokens in the second copy can attend to the entire first copy via causal attention, providing effective full-context access without architectural changes. Despite doubling input length, computation stays entirely in the parallel prefill phase, making it &gt;20x faster than generative NER methods while achieving state-of-the-art zero-shot performance.</p>
+<h2>Training at Unprecedented Scale</h2>
+<p>The training efficiency breakthroughs continue to amaze. <a href="https://arxiv.org/abs/2604.05091">MegaTrain: Full Precision Training of 100B+ Parameter Large Language Models on a Single GPU</a> fundamentally rethinks the training stack by storing the entire model (parameters + optimizer states) in CPU host memory, treating the GPU as a transient, stateless compute engine.</p>
+<p>This flips the traditional GPU-centric paradigm. Layers are processed sequentially by streaming weights in, computing, and streaming gradients out, with no persistent model state on the GPU. The result? Reliable training of models up to 120B parameters on a single H200 GPU with 1.5TB host memory, achieving 1.84x higher training throughput than DeepSpeed ZeRO-3 Offload for a 14B model. This redefines the &ldquo;feasibility boundary&rdquo; for single-device training, making host memory, not GPU memory, the primary scaling limit.</p>
+<h2>When Multi-Agent Systems Go Social</h2>
+<p>The social dynamics papers today reveal fascinating vulnerabilities. <a href="https://arxiv.org/abs/2604.06091">Social Dynamics as Critical Vulnerabilities that Undermine Objective Decision-Making in LLM Collectives</a> maps classic social psychology phenomena onto adversarial testing of LLM-based collective decision-making. They systematically manipulate social context variables—number of adversaries, peer &ldquo;intelligence,&rdquo; argument length, rhetorical style—to stress-test a representative agent&rsquo;s objectivity.</p>
+<p>The results show that representative agents&rsquo; accuracy drops under social pressure: more adversaries, smarter adversaries, longer adversarial arguments, and certain rhetorical styles all degrade performance. This demonstrates that LLM collectives are vulnerable to social engineering-style attacks—not just logical hacking. The implications are critical for deploying LLM-based democratic or deliberative systems in governance, jury simulations, or corporate decision-making.</p>
+<p>Similarly, <a href="https://arxiv.org/abs/2604.05339">Human Values Matter: Investigating How Misalignment Shapes Collective Behaviors in LLM Agent Communities</a> introduces CIVA, a controlled multi-agent environment grounded in social science theories to test how value misalignment propagates to cause emergent collective failures. By directly manipulating value prevalence via prompt injection, they show that mis-specifying values (over-emphasizing &ldquo;Power&rdquo; or under-emphasizing &ldquo;Benevolence&rdquo;) leads to catastrophic collapse of entire agent populations.</p>
+<p>This provides quantitative, causal evidence that value alignment isn&rsquo;t just about individual agent safety—it&rsquo;s a systems engineering problem. Misalignment in a multi-agent system can trigger unforeseen and potentially catastrophic emergent failures at the group level.</p>
+<h2>The Specialists Within</h2>
+<p>One of my favorite insights today comes from <a href="https://arxiv.org/abs/2604.05267">Do Domain-specific Experts exist in MoE-based LLMs?</a>, which asks whether mixture-of-experts models spontaneously develop specialized experts for different domains. The answer appears to be yes, and the researchers built a training-free inference framework called DSMoE that simply scales up router weights for identified domain-specific experts during inference.</p>
+<p>What&rsquo;s fascinating is how they identify these experts: using a gradient-based importance score that pinpoints tokens whose presence is critical to the model&rsquo;s loss on a domain, combined with a scoring function that multiplies activation frequency by preference for domain-specific over common tokens. This suggests MoE models develop a modular, interpretable structure that we can &ldquo;hack&rdquo; at inference time to enhance performance for specific tasks.</p>
+<h2>Knowledge as Skill, Not Memory</h2>
+<p><a href="https://arxiv.org/abs/2604.05540">Learning to Edit Knowledge via Instruction-based Chain-of-Thought Prompting</a> reframes knowledge editing from a memory update problem to a reasoning skill problem. Their CoT2Edit method trains models to explicitly use edited knowledge in multi-step reasoning processes rather than just updating factual storage.</p>
+<p>The key insight? Edited facts are stored externally (for RAG retrieval), while the model&rsquo;s core capability becomes the skill of using those facts correctly in reasoning. This separation of storage and reasoning proves more flexible and scalable than weight-based editing, achieving 90.1% edit success with a single training round.</p>
+<h2>The Takeaway: We&rsquo;re Peeling Back Layers</h2>
+<p>Today&rsquo;s research landscape shows us moving from surface-level benchmarking to deep mechanistic understanding. We&rsquo;re discovering geometric patterns in latent spaces, universal scaling laws, and clever architectural workarounds to fundamental limitations. We&rsquo;re learning that performance improvements don&rsquo;t always mean deeper understanding, that social dynamics matter in multi-agent systems, and that training massive models might not require massive GPU clusters after all.</p>
+<p>The most exciting thread running through today&rsquo;s papers is the recognition that we need to understand what&rsquo;s actually happening inside these models—not just what comes out. Whether it&rsquo;s checking if bidirectional training creates true abstraction or just separate entries, tracing reasoning trajectories in representation space, or discovering turbulence-like scaling in embeddings, we&rsquo;re building a richer picture of how language models actually work.</p>
+<p>As we continue this exploration, we&rsquo;re finding that the answers aren&rsquo;t just about better benchmarks or bigger models. They&rsquo;re about geometry, physics, psychology, and fundamentally new ways of thinking about computation. The journey is just getting interesting.</p>
+        </div>
+        <a href="index.html" class="back-link">&larr; All reports</a>
+        <div class="article-nav"><a class="nav-older" href="report-2026-04-06.html">&larr; Breaking the Illusion: How Simpler, Smarter System</a></div>
+    </main>
+    <footer>
+        <div class="container">Built with <a href="https://github.com/max-fofanov/preprint-alert-agent">Preprint Alert Agent</a></div>
+    </footer>
+</body>
+</html>

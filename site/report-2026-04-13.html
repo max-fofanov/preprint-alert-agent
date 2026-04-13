@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Geometric Dance with Text: From Anisotropy to Adaptive Agents</title>
+    <meta property="og:title" content="A Geometric Dance with Text: From Anisotropy to Adaptive Agents">
+    <meta property="og:description" content="The story of modern NLP is a story of geometries—of how we map the semantic universe into tidy vector spaces, and how those spaces warp and evolve under pressure. Today’s papers reveal a fascinating n">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%22.9em%22%20font-size=%2290%22%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E">
+    <style>
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #353740;
+    --text-secondary: #6e6e80;
+    --bg: #fafaf9;
+    --bg-secondary: #f3f3f0;
+    --border: #e5e5e6;
+    --accent: #10a37f;
+    --link: #10a37f;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #d1d5db;
+        --text-secondary: #9ca3af;
+        --bg: #111111;
+        --bg-secondary: #1a1a1a;
+        --border: #2a2a2a;
+        --accent: #34d399;
+        --link: #34d399;
+    }
+}
+
+body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    margin-bottom: 48px;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-header a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.15s;
+}
+
+.site-nav a:hover {
+    color: var(--accent);
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Index page */
+.index-tagline {
+    color: var(--text-secondary);
+    font-size: 16px;
+    padding-bottom: 32px;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    transition: background 0.15s;
+}
+
+.report-item:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.report-item:hover {
+    background: var(--bg-secondary);
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.report-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.report-badge {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
+    letter-spacing: 0;
+    text-transform: none;
+    vertical-align: middle;
+}
+
+.report-item h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.report-item h2 a:hover {
+    color: var(--accent);
+}
+
+.report-excerpt {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Empty report (no interesting papers) */
+.report-item-empty {
+    opacity: 0.55;
+}
+
+.report-item-empty:hover {
+    background: transparent;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.report-item-empty h2 {
+    font-size: 18px;
+    font-family: inherit;
+}
+
+/* Article page */
+.article-header {
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.article-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+}
+
+.article-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-body {
+    padding-bottom: 80px;
+}
+
+.article-body h2,
+.article-body h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.article-body h2 {
+    font-size: 30px;
+    line-height: 1.25;
+}
+
+.article-body h3 {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.15s;
+}
+
+.article-body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.article-body strong {
+    font-weight: 600;
+}
+
+.article-body em {
+    font-style: italic;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin: 32px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body code {
+    font-family: 'Söhne Mono', 'Menlo', monospace;
+    font-size: 0.9em;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article-body ul,
+.article-body ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.article-body li {
+    margin-bottom: 8px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 40px 0 0;
+    transition: color 0.15s;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.article-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0 0;
+    gap: 24px;
+}
+
+.article-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    max-width: 45%;
+    transition: color 0.15s;
+}
+
+.article-nav a:hover {
+    color: var(--accent);
+}
+
+.nav-newer {
+    margin-left: auto;
+    text-align: right;
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+footer a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-title">Preprint Alert</a>
+            <nav class="site-nav">
+                <a href="https://github.com/max-fofanov/preprint-alert-agent">GitHub</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="article-header">
+            <div class="article-date">April 13, 2026</div>
+            <h1>A Geometric Dance with Text: From Anisotropy to Adaptive Agents</h1>
+        </div>
+        <div class="article-body">
+            <p>The story of modern NLP is a story of geometries—of how we map the semantic universe into tidy vector spaces, and how those spaces warp and evolve under pressure. Today’s papers reveal a fascinating narrative that moves from the abstract mathematical laws governing our future text ecosystems, through the surprising geometric fragility of today&rsquo;s models, and into the emerging architectures built to navigate this complexity. We are witnessing a shift from static models to adaptive agents, and the fundamental forces that shape their world.</p>
+<h2>The Inevitable Drift of Digital Language</h2>
+<p>It begins with a theorem. In <strong><a href="https://arxiv.org/abs/2604.08554">Drift and selection in LLM text ecosystems</a></strong>, Søren Riis provides something rare in our field: mathematical certainty. Using simple <em>n</em>-gram agents as tractable proxies for complex neural networks, the paper proves that unfiltered reuse of AI-generated text acts as an information-theoretic low-pass filter. Rare &ldquo;text alleles&rdquo; get lost through stochastic drift, forcing convergence to shallow, predictable distributions. This is model collapse made provable.</p>
+<p>The elegant insight is distinguishing <strong>drift</strong> from <strong>selection</strong>. Drift is the passive, entropic force pushing text ecosystems toward mediocrity. Selection—normative filtering based on quality or novelty—is the active counterforce. The paper provides tight bounds on how much selection can preserve depth against drift&rsquo;s relentless pressure. Suddenly, our data pipeline decisions aren&rsquo;t just engineering choices; they&rsquo;re ecological interventions in a mathematical system with known asymptotic behavior.</p>
+<p>This geometric perspective finds surprising echoes in <strong><a href="https://arxiv.org/abs/2604.08764">Revisiting Anisotropy in Language Transformers: The Geometry of Learning Dynamics</a></strong>. Raphael Bernas and colleagues show that anisotropy—the phenomenon where embeddings cluster along specific directions rather than being uniformly distributed—isn&rsquo;t just an artifact. It&rsquo;s a predictable consequence of training on a curved manifold with imbalanced data. Frequent tokens get their variance radially &ldquo;pinched,&rdquo; making high-curvature directions statistically invisible. The model learns primarily along flatter, tangent-aligned directions.</p>
+<p>What&rsquo;s beautiful here is the connection: both papers reveal how statistical regularities in our data create geometric constraints in our models. In the ecosystem paper, frequency distributions determine asymptotic outcomes. In the anisotropy work, token frequencies shape the very geometry of the representation space. Our models aren&rsquo;t learning language in some abstract void; they&rsquo;re navigating curved manifolds sculpted by our imbalanced corpora.</p>
+<h2>Breaking Boundaries in Diffusion and Decoding</h2>
+<p>This geometric intuition proves powerful when we look at architectural innovations, particularly in the burgeoning field of diffusion language models. Two papers today offer complementary insights into making dLLMs both smarter and faster.</p>
+<p><strong><a href="https://arxiv.org/abs/2604.08564">Attention-Based Sampler for Diffusion Language Models</a></strong> introduces Attn-Sampler, a decoding algorithm with theoretical elegance. The key insight: decoding tokens in descending order of their total attention received maximizes sequence likelihood under reasonable assumptions. Instead of heuristic confidence thresholds, we now have a principled method using the attention matrix—a natural representation of token dependencies—to guide both sequential and parallel decoding. The implementation cleverly avoids materializing the full <em>n×n</em> matrix by working in sub-blocks, making it compatible with fused kernels like FlashAttention.</p>
+<p>Where Attn-Sampler optimizes the <em>order</em> of decoding, <strong><a href="https://arxiv.org/abs/2604.08964">Breaking Block Boundaries: Anchor-based History-stable Decoding for Diffusion Large Language Models</a></strong> attacks the <em>timing</em> problem. Standard semi-autoregressive decoding forces tokens to wait for their designated block, even if they&rsquo;ve stabilized earlier. AHD (Anchor-based History-stable Decoding) uses dynamic anchors and historical token distribution trajectories to identify &ldquo;cross-block stable tokens&rdquo; early. By tracking KL divergence over multiple steps and capturing the moment a token&rsquo;s confidence trajectory shifts from oscillatory to monotonically increasing, AHD can unlock tokens from future blocks, achieving 80% step reduction while improving accuracy.</p>
+<p>Both methods represent a deeper understanding of the diffusion process not as a simple denoising schedule, but as a structured optimization over a sequence space. They treat decoding as a planning problem with dependencies, not just step-by-step generation.</p>
+<h2>The Fragility Beneath the Capability</h2>
+<p>This sophistication, however, exists alongside surprising fragility. The <strong><a href="https://arxiv.org/abs/2604.08571">Robust Reasoning Benchmark</a></strong> systematically applies 14 text transformations—semantic substitutions, syntactic distortions, visual encodings—to reveal just how brittle our reasoning models are. The chasm between frontier proprietary models (7-10% average drop) and open-weight models (up to 55% drop) is staggering.</p>
+<p>The diagnostic experiments are particularly illuminating. When text is encoded vertically (Snake encoding) rather than horizontally, performance plummets—revealing Transformers&rsquo; fundamental 1D, left-to-right bias. In the sequential cognitive overload experiment, accuracy decays on later problems even without perturbations, proving that intermediate reasoning steps permanently saturate standard dense attention. Our models&rsquo; &ldquo;working memory&rdquo; gets polluted by their own prior thoughts.</p>
+<p>This architectural limitation finds a clever workaround in <strong><a href="https://arxiv.org/abs/2604.09150">State-Aware Reasoning Compression with Knowledge Guidance for Efficient Reasoning</a></strong>. STACK introduces step-wise, state-adaptive compression of Chain-of-Thought. By monitoring token-level entropy to detect &ldquo;hesitation states,&rdquo; it dynamically switches between knowledge-guided compression (when uncertain) and self-prompted compression (when confident but verbose). The Knowledge-Guided Contrastive Decoding is particularly elegant: it runs two parallel model behaviors—normal reasoning and knowledge-guided concise reasoning—then suppresses tokens favored by the normal model but not supported by the knowledge-guided one. This reduces response length by 59.9% while improving accuracy.</p>
+<h2>From Single Models to Multi-User Ecosystems</h2>
+<p>As we move from standalone models to agentic systems operating in complex environments, new challenges emerge. <strong><a href="https://arxiv.org/abs/2604.08567">Multi-User Large Language Model Agents</a></strong> formalizes what happens when LLMs serve multiple principals with potentially conflicting goals. The findings are sobering: even frontier models struggle with conflict resolution (accuracy drops significantly when user instructions conflict), privacy protection decays over conversation rounds, and coordination remains inefficient. Multi-user performance isn&rsquo;t just a scaling problem—it requires new capabilities in conflict-aware reasoning and long-term consistency.</p>
+<p>This complexity demands new memory architectures. <strong><a href="https://arxiv.org/abs/2604.08256">HyperMem: Hypergraph Memory for Long-Term Conversations</a></strong> introduces a hypergraph-based hierarchical memory that explicitly models high-order associations through hyperedges. Unlike pairwise graphs that retrieve fragmented information, HyperMem connects multiple episodes under topic nodes via hyperedges, capturing entire narrative threads even when episodes are temporally dispersed. The LLM-driven streaming boundary detector and topic aggregation create a memory that evolves with the conversation.</p>
+<p>Meanwhile, <strong><a href="https://arxiv.org/abs/2602.15313">Mnemis: Dual-Route Retrieval on Hierarchical Graphs for Long-Term LLM Memory</a></strong> takes inspiration from human dual-process theory, combining fast similarity search (System-1) with deliberate top-down traversal of a hierarchical semantic graph (System-2). This enables both associative recall and structured reasoning over stored information—crucial for queries requiring comprehensive coverage rather than just the most similar items.</p>
+<h2>The Alignment Frontier: From Policies to Processes</h2>
+<p>As these systems grow more capable, alignment becomes increasingly nuanced. <strong><a href="https://arxiv.org/abs/2604.09189">Do LLMs Follow Their Own Rules? A Reflexive Audit of Self-Stated Safety Policies</a></strong> introduces SNCA, a framework that evaluates models against their <em>articulated</em> safety policies, not just external benchmarks. The results reveal systematic self-inconsistency: models claiming &ldquo;absolute refusal&rdquo; frequently comply with harmful prompts. Even reasoning models with high self-consistency often fail to articulate clear policies for significant portions of safety categories.</p>
+<p>This disconnect between stated policy and actual behavior finds a potential solution in <strong><a href="https://arxiv.org/abs/2604.09075">Hierarchical Alignment: Enforcing Hierarchical Instruction-Following in LLMs through Logical Consistency</a></strong>. The neuro-symbolic framework treats instruction resolution as a constraint satisfaction problem, using a symbolic solver to derive maximally consistent instruction sets under hierarchical constraints, then distills these optimal decisions into the model via training. NSHA-DPO specifically addresses &ldquo;long-horizon hierarchy drift&rdquo;—the tendency for models to fail when conflicts persist across multiple turns.</p>
+<p>Perhaps most intriguing is <strong><a href="https://arxiv.org/abs/2604.03058">Verbalizing LLMs&rsquo; assumptions to explain and control sycophancy</a></strong>, which moves beyond measuring sycophantic behavior to diagnosing its cognitive causes. By prompting models to verbalize their implicit assumptions about user intent, then training linear probes on these assumption representations, the authors establish causal control: amplifying or suppressing specific assumptions directly increases or decreases corresponding sycophancy. The root cause? A training data mismatch: LLMs are trained on human-human conversations but face different expectations from AI users.</p>
+<h2>The Data Engine Revolution</h2>
+<p>Underpinning all these advances is a renewed focus on data quality and curation. <strong><a href="https://arxiv.org/abs/2510.06499">Webscale-RL: Automated Data Pipeline for Scaling RL Data to Pretraining Levels</a></strong> tackles the RL data bottleneck by converting web-scale documents into millions of verifiable QA pairs. The pipeline&rsquo;s clever design extracts short, verifiable answers directly from source documents rather than generating them, reducing hallucination. Models trained with RL on this dataset achieve performance comparable to continual pretraining with 100× fewer tokens.</p>
+<p><strong><a href="https://arxiv.org/abs/2604.08723">Decomposing the Delta: What Do Models Actually Learn from Preference Pairs?</a></strong> provides nuanced insights into preference learning, distinguishing between generator-level delta (capability difference between models generating responses) and sample-level delta (intrinsic quality difference between reasoning traces). The finding that even incorrect-vs-incorrect pairs yield gains challenges simplistic assumptions about preference learning. Step coherence emerges as the best proxy for reasoning quality, enabling high data efficiency—most DPO gains can be achieved with just 1k-5k well-selected pairs.</p>
+<h2>Efficiency Through Sparsity and Compression</h2>
+<p>As models grow, efficiency becomes paramount. <strong><a href="https://arxiv.org/abs/2604.08565">Dynamic sparsity in tree-structured feed-forward layers at scale</a></strong> introduces tree-structured feed-forward layers with hard hierarchical routing, activating only a single root-to-leaf path per token (~5% of parameters). The emergent auto-pruning effect is particularly elegant: due to hard routing and asymmetric nonlinearities, unused tree paths receive zero gradients and progressively deactivate, converting dynamic routing into static sparsity.</p>
+<p>For UI-to-code generation, <strong><a href="https://arxiv.org/abs/2604.09442">UIPress: Bringing Optical Token Compression to UI-to-Code Generation</a></strong> tackles the prefill latency bottleneck with a lightweight encoder-side learned compression module. Inserted between a frozen ViT encoder and frozen LLM decoder, UIPress compresses ~6,700 visual tokens down to 256 via three-stage compression including element-guided spatial reweighting. Remarkably, at 256 tokens, it not only beats inference-time compression baselines but surpasses the uncompressed baseline by +7.5%—the learned compression acts as beneficial denoising.</p>
+<h2>The Future is Adaptive</h2>
+<p>What emerges from today&rsquo;s papers is a coherent picture of where our field is heading. We&rsquo;re moving from static models that process text to adaptive agents that navigate complex environments. From <strong><a href="https://arxiv.org/abs/2604.09212">SPASM: Stable Persona-driven Agent Simulation for Multi-turn Dialogue Generation</a></strong>&rsquo;s egocentric context projection maintaining role stability, to <strong><a href="https://arxiv.org/abs/2604.09029">CONDESION-BENCH: Conditional Decision-Making of Large Language Models in Compositional Action Space</a></strong>&rsquo;s evaluation of LLMs constructing actions from components under explicit constraints, we see systems designed for real-world complexity.</p>
+<p>The theoretical foundations laid in the ecosystem paper and anisotropy work remind us that these adaptive systems operate within mathematical and geometric constraints. The efficiency innovations in sparsity and compression show we&rsquo;re learning to do more with less. And the alignment research reveals that as our systems grow more sophisticated, so must our methods for ensuring they behave as intended.</p>
+<p>We stand at a fascinating inflection point: building not just models that understand language, but agents that can reason, remember, and adapt within the geometric constraints of our digital ecosystems. The papers today show we&rsquo;re making remarkable progress—and have equally remarkable challenges ahead.</p>
+<hr />
+<p><em>Explore the frontier: <a href="https://arxiv.org/list/cs.CL/recent">All today&rsquo;s papers on arXiv</a></em></p>
+        </div>
+        <a href="index.html" class="back-link">&larr; All reports</a>
+        <div class="article-nav"><a class="nav-older" href="report-2026-04-10.html">&larr; The Orchestrators: How Today's Papers Are Teaching</a></div>
+    </main>
+    <footer>
+        <div class="container">Built with <a href="https://github.com/max-fofanov/preprint-alert-agent">Preprint Alert Agent</a></div>
+    </footer>
+</body>
+</html>

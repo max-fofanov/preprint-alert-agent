@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beyond Scale: The Subtle Art of Making Language Models Smarter, Safer, and More Efficient</title>
+    <meta property="og:title" content="Beyond Scale: The Subtle Art of Making Language Models Smarter, Safer, and More Efficient">
+    <meta property="og:description" content="What if you could make a language model not just bigger, but fundamentally *smarter*—more accurate, less prone to fabrication, and dramatically more efficient—by changing how it thinks, not just how m">
+    <meta property="og:type" content="article">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Ctext%20y=%22.9em%22%20font-size=%2290%22%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E">
+    <style>
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text: #353740;
+    --text-secondary: #6e6e80;
+    --bg: #fafaf9;
+    --bg-secondary: #f3f3f0;
+    --border: #e5e5e6;
+    --accent: #10a37f;
+    --link: #10a37f;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #d1d5db;
+        --text-secondary: #9ca3af;
+        --bg: #111111;
+        --bg-secondary: #1a1a1a;
+        --border: #2a2a2a;
+        --accent: #34d399;
+        --link: #34d399;
+    }
+}
+
+body {
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    margin-bottom: 48px;
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-header a {
+    text-decoration: none;
+    color: var(--text);
+}
+
+.site-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.site-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.15s;
+}
+
+.site-nav a:hover {
+    color: var(--accent);
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Index page */
+.index-tagline {
+    color: var(--text-secondary);
+    font-size: 16px;
+    padding-bottom: 32px;
+}
+
+.report-list {
+    list-style: none;
+    padding: 0;
+}
+
+.report-item {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    transition: background 0.15s;
+}
+
+.report-item:last-child {
+    border-bottom: 1px solid var(--border);
+}
+
+.report-item:hover {
+    background: var(--bg-secondary);
+    margin: 0 -24px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.report-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.report-badge {
+    display: inline-block;
+    font-size: 12px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 10px;
+    letter-spacing: 0;
+    text-transform: none;
+    vertical-align: middle;
+}
+
+.report-item h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.report-item h2 a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.report-item h2 a:hover {
+    color: var(--accent);
+}
+
+.report-excerpt {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Empty report (no interesting papers) */
+.report-item-empty {
+    opacity: 0.55;
+}
+
+.report-item-empty:hover {
+    background: transparent;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.report-item-empty h2 {
+    font-size: 18px;
+    font-family: inherit;
+}
+
+/* Article page */
+.article-header {
+    padding: 80px 0 40px;
+    text-align: center;
+}
+
+.article-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+}
+
+.article-header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.article-body {
+    padding-bottom: 80px;
+}
+
+.article-body h2,
+.article-body h3 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 48px;
+    margin-bottom: 16px;
+}
+
+.article-body h2 {
+    font-size: 30px;
+    line-height: 1.25;
+}
+
+.article-body h3 {
+    font-size: 24px;
+    line-height: 1.3;
+}
+
+.article-body p {
+    margin-bottom: 24px;
+}
+
+.article-body a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-thickness 0.15s;
+}
+
+.article-body a:hover {
+    text-decoration-thickness: 2px;
+}
+
+.article-body strong {
+    font-weight: 600;
+}
+
+.article-body em {
+    font-style: italic;
+}
+
+.article-body blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin: 32px 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.article-body code {
+    font-family: 'Söhne Mono', 'Menlo', monospace;
+    font-size: 0.9em;
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article-body ul,
+.article-body ol {
+    margin-bottom: 24px;
+    padding-left: 24px;
+}
+
+.article-body li {
+    margin-bottom: 8px;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    padding: 40px 0 0;
+    transition: color 0.15s;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.article-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0 0;
+    gap: 24px;
+}
+
+.article-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    max-width: 45%;
+    transition: color 0.15s;
+}
+
+.article-nav a:hover {
+    color: var(--accent);
+}
+
+.nav-newer {
+    margin-left: auto;
+    text-align: right;
+}
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 48px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+footer a {
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--accent);
+}
+</style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="site-title">Preprint Alert</a>
+            <nav class="site-nav">
+                <a href="https://github.com/max-fofanov/preprint-alert-agent">GitHub</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="article-header">
+            <div class="article-date">April 14, 2026</div>
+            <h1>Beyond Scale: The Subtle Art of Making Language Models Smarter, Safer, and More Efficient</h1>
+        </div>
+        <div class="article-body">
+            <p>What if you could make a language model not just bigger, but fundamentally <em>smarter</em>—more accurate, less prone to fabrication, and dramatically more efficient—by changing how it thinks, not just how many parameters it has? Today&rsquo;s arXiv crop showcases a wave of research moving beyond the brute-force scaling paradigm, offering clever architectural tweaks, new training paradigms, and surgical interventions that promise to reshape what&rsquo;s possible with LLMs.</p>
+<h2>Calibration Without Supervision</h2>
+<p>One of the most persistent problems with LLMs is their overconfidence—they often state incorrect things with high, unwarranted certainty. The classic solution involves expensive human feedback or carefully curated datasets. <a href="https://arxiv.org/abs/2604.09624">Self-Calibrating Language Models via Test-Time Discriminative Distillation</a> proposes a brilliantly simple alternative: use the model&rsquo;s own internal &ldquo;truth detector.&rdquo; The method, SECL, treats a model&rsquo;s discriminative probability (P(True)) as a free supervision signal to correct its verbalized confidence. By applying lightweight LoRA updates only when a change detector spots distribution shifts, SECL reduces calibration error by 56–78% across diverse domains without any labeled data. It’s a classic case of letting the model teach itself, turning a known theoretical gap into a practical self-improvement engine.</p>
+<p>This theme of internal self-supervision is echoed in <a href="https://arxiv.org/abs/2604.10660">Efficient Process Reward Modeling via Contrastive Mutual Information</a>, which introduces CPMI, a method for automatically scoring the quality of individual reasoning steps in a Chain-of-Thought. Instead of running expensive Monte Carlo rollouts or hiring human annotators, CPMI cleverly uses the model&rsquo;s own probability distributions to estimate how much each step increases the likelihood of the correct answer, relative to plausible alternative steps. This contrastive formulation provides dense, step-level rewards while slashing dataset construction time by 84%.</p>
+<h2>The Mechanics of Mind and Memory</h2>
+<p>Several papers today dive deep into the mechanistic workings of models, seeking to understand and manipulate their internal representations with newfound precision.</p>
+<p><a href="https://arxiv.org/abs/2604.10031">CoSToM:Causal-oriented Steering for Intrinsic Theory-of-Mind Alignment in Large Language Models</a> performs a kind of neurosurgery on LLMs. The researchers first use causal tracing to locate where Theory of Mind concepts (beliefs, desires, intentions) are encoded—surprisingly, in shallow-to-middle layers. Then, in a clever hack, they use a <em>frozen</em> decoder as a differentiable verifier to backpropagate ToM-specific loss gradients through an activation patch, updating only lightweight LoRA adapters in the early encoder layers. This surgically aligns the model&rsquo;s &ldquo;mind-reading&rdquo; circuitry, boosting performance on social reasoning tasks without retraining the whole network. It&rsquo;s a powerful demonstration that we can now edit specific cognitive functions within these black boxes.</p>
+<p>Similarly, <a href="https://arxiv.org/abs/2604.10697">Attention Sinks as Internal Signals for Hallucination Detection in Large Language Models</a> identifies a clear, interpretable signal for when a model is fabricating: attention &ldquo;black holes.&rdquo; The researchers found that hallucinations correlate strongly with tokens that suck in a disproportionate amount of attention mass during generation, especially those with large associated value vector norms. A simple logistic regression probe on these &ldquo;sink scores&rdquo; achieves state-of-the-art hallucination detection, winning 23 out of 28 model-dataset pairs. This suggests hallucinations aren&rsquo;t random noise but have a distinct, measurable signature in the attention patterns.</p>
+<p>Memory systems are also getting a fundamental rethink. <a href="https://arxiv.org/abs/2604.11563">Synthius-Mem: Brain-Inspired Hallucination-Resistant Persona Memory</a> achieves a staggering 99.6% adversarial robustness on the LoCoMo benchmark by shifting from <em>retrieving conversation history</em> to <em>building a structured persona model</em>. Instead of searching through raw dialogue snippets, it continuously distills facts into six cognitive domains (biography, preferences, etc.), creating a clean knowledge graph that enables precise fact lookup and, crucially, the ability to confidently say &ldquo;I don&rsquo;t know&rdquo; for undisclosed information. Meanwhile, <a href="https://arxiv.org/abs/2604.11628">Back to Basics: Let Conversational Agents Remember with Just Retrieval and Generation</a> argues we&rsquo;ve over-engineered memory systems. Their analysis identifies &ldquo;signal sparsity&rdquo; (relevant evidence drowning in conversational noise) and &ldquo;dual-level redundancy&rdquo; (retrieving entire noisy sessions) as core bottlenecks. Their solution, Turn Isolation Retrieval followed by Query-Driven Pruning, uses simple primitives to outperform complex graph-based or reinforcement-learning memory systems, suggesting sometimes the most elegant solution is to better activate what&rsquo;s already there.</p>
+<h2>Reasoning, Planning, and the Limits of Verification</h2>
+<p>When it comes to complex reasoning and planning, today&rsquo;s papers reveal both sophisticated new architectures and sobering limitations.</p>
+<p><a href="https://arxiv.org/abs/2604.11188">MathAgent: Adversarial Evolution of Constraint Graphs for Mathematical Reasoning Data Synthesis</a> treats data synthesis as an unsupervised optimization game. A tri-agent system (Proposer, Critic, Moderator) adversarially evolves constraint graphs representing problem structures, explicitly optimizing for logical complexity. These abstract blueprints are then instantiated into natural language problems. Models fine-tuned on just 1K such synthesized problems outperform those trained on much larger standard datasets and show superior out-of-distribution generalization, proving that a small set of <em>structurally diverse</em> problems can be more valuable than a mountain of similar ones.</p>
+<p>For tool-use, <a href="https://arxiv.org/abs/2604.11322">Do LLMs Know Tool Irrelevance? Demystifying Structural Alignment Bias in Tool Invocations</a> uncovers a critical flaw: LLMs prioritize matching a query&rsquo;s <em>syntax</em> to a tool&rsquo;s parameters over assessing the tool&rsquo;s <em>semantic relevance</em>. A model might invoke a <code>find_basketball_athlete</code> tool for a query about a soccer player just because the query contains a name that fits the parameter slot. Their Contrastive Attention Attribution method pinpoints the &ldquo;Structural Matching Pathway&rdquo; that overpowers the &ldquo;Semantic Checking Pathway&rdquo; in the model&rsquo;s brain. Even more striking, common mitigation strategies like one-shot prompting can backfire, reinforcing the very structural patterns causing the error.</p>
+<p>The verification capabilities of LLMs face similar scrutiny. <a href="https://arxiv.org/abs/2604.10990">When Verification Fails: How Compositionally Infeasible Claims Escape Rejection</a> exposes that models often pass scientific claim verification benchmarks using a cheap shortcut: checking only the most salient constraint. They construct clever &ldquo;compositionally infeasible&rdquo; claims where the salient detail is correct but a non-salient, compositional constraint is false. Models that ace standard benchmarks fail catastrically on these, accepting the claims at high rates. The sobering finding? Common interventions like closed-world instructions don&rsquo;t fix the underlying reasoning bottleneck; they just move models along a shared ROC curve, trading false accepts for false rejects. True compositional reasoning remains a fundamental challenge.</p>
+<h2>Efficiency Through Architectural Ingenuity</h2>
+<p>As models grow, efficient inference becomes paramount. Several papers today offer clever architectural modifications that deliver significant gains with minimal overhead.</p>
+<p><a href="https://arxiv.org/abs/2604.10135">Think in Sentences: Explicit Sentence Boundaries Enhance Language Model&rsquo;s Capabilities</a> makes a simple yet profound observation: explicitly marking sentence boundaries with a special delimiter token forces models to develop sentence-by-sentence reasoning. This structural prior, implemented through fine-tuning or in-context learning, yields gains of up to 7.7% on math reasoning and 12.5% on QA tasks. It&rsquo;s a reminder that aligning training with human-like cognitive units can be more effective than arbitrary reasoning tokens.</p>
+<p><a href="https://arxiv.org/abs/2604.10791">Position-Agnostic Pre-Projection for Transformer Attention</a> adds a small nonlinear MLP and a content skip connection before the standard Q/K/V projections. This creates a position-agnostic information pathway that can bypass attention entirely, controlled by a learned <code>W_skip</code> matrix initialized near zero. The method improves frozen-probe accuracy by 40.6% on LAMBADA while adding zero KV-cache overhead. Analysis reveals deeper layers use this bypass more strongly, suggesting later transformer stages increasingly rely on pure content over positional attention.</p>
+<p>For long-context generation, <a href="https://arxiv.org/abs/2604.11288">Transactional Attention: Semantic Sponsorship for KV-Cache Retention</a> solves the &ldquo;dormant token&rdquo; problem. Credentials, API keys, or other critical tokens that receive near-zero attention during prefill are invisible to standard compression methods. Transactional Attention uses semantic patterns (like <code>"key:"</code>) as anchors to &ldquo;sponsor&rdquo; and protect adjacent tokens with exponentially decaying vouchers. At an extreme 0.4% compression (16 tokens), it achieves 100% credential retrieval accuracy where six strong baselines get 0%.</p>
+<p>Perhaps the most ambitious efficiency effort is <a href="https://arxiv.org/abs/2604.11554">Relax: An Asynchronous Reinforcement Learning Engine for Omni-Modal Post-Training at Scale</a>, a co-designed three-layer architecture for large-scale RL. Its <code>TransferQueue</code> data bus decouples rollout and training services with a single staleness parameter, enabling smooth interpolation from synchronous to fully asynchronous training. This allows training to proceed on potentially stale data, yielding up to 2x throughput gains while converging to the same final reward. Its &ldquo;omni-native&rdquo; design natively handles heterogeneous data flows (image, text, audio) and efficiently supports Mixture-of-Experts training with minimal overhead.</p>
+<h2>The Future is Agentic (and Needs Better Benchmarks)</h2>
+<p>The march toward more capable AI agents continues, with new frameworks and more rigorous evaluation.</p>
+<p><a href="https://arxiv.org/abs/2604.10917">HTAA: Enhancing LLM Planning via Hybrid Toolset Agentization &amp; Adaptation</a>, already deployed in a major ride-hailing platform, introduces hierarchical tool-use. It clusters frequently co-used fine-grained tools into &ldquo;agent tools&rdquo; that handle entire subtasks internally, while maintaining a hybrid set of basic tools for simple operations. Its &ldquo;asymmetric planner adaptation&rdquo; uses backward trajectory reconstruction to efficiently train the high-level planner to coordinate with these agent tools, dramatically improving task success rates while shortening planning horizons.</p>
+<p><a href="https://arxiv.org/abs/2604.11201">CocoaBench: Evaluating Unified Digital Agents in the Wild</a> provides a much-needed reality check. Their benchmark requires agents to dynamically compose multiple capabilities (vision, search, coding) within single, long-horizon tasks. The best system scores only 45.1% success; leading open-source models are below 12%. Crucially, CocoaBench decouples tasks from any specific runtime or tool API, forcing agents to reason about tool use in an open world. It reveals that top-performing agents heavily favor code execution, suggesting programmatic processing is superior for the multi-step reasoning these tasks demand.</p>
+<p>Finally, <a href="https://arxiv.org/abs/2604.10866">OccuBench: Evaluating AI Agents on Real-World Professional Tasks via Language World Models</a> tackles the coverage problem with a clever twist: it uses an LLM itself as the simulation environment. This &ldquo;Language World Model&rdquo; approach allows benchmarking across 65 specialized professional domains (from emergency triage to customs processing) without building costly software simulators. The results show no single model dominates all industries, and implicit data degradation (subtle, unmarked errors) is the hardest challenge, causing performance to drop more than explicit failures. This benchmark moves us toward evaluating AI on the vast landscape of real human work, not just narrow technical tasks.</p>
+<h2>A New Paradigm for Data and Control</h2>
+<p>Underpinning many advances is a shift toward more intelligent data curation and finer-grained control.</p>
+<p>For data synthesis, <a href="https://arxiv.org/abs/2604.10114">CircuitSynth: Reliable Synthetic Data Generation</a> guarantees 100% logical validity through a neuro-symbolic framework. A Probabilistic Sentential Decision Diagram (PSDD) models the latent semantic plan, with its structure compiled from logical constraints—making it impossible to generate an invalid plan. A teacher LLM produces structured plans, a PSDD distills them, and convex optimization ensures distributional goals (like covering rare combinations) are met. The result is synthetic data that strictly adheres to schema while better covering the tail of the distribution.</p>
+<p>For controlling model outputs, <a href="https://arxiv.org/abs/2604.10667">Learning and Enforcing Context-Sensitive Control for LLMs</a> automates the creation of formal grammars from interaction data. Starting from a simple context-free grammar, their system uses temperature-scheduled sampling and an oracle to generate positive/negative examples, then learns attribute grammar annotations that generalize to full context-sensitive constraints. A 1B-parameter LLM equipped with these learned constraints can match or outperform much larger models on tasks requiring strict output validity, like arithmetic expression evaluation.</p>
+<h2>The Takeaway</h2>
+<p>The collective message from today&rsquo;s research is clear: the next frontier isn&rsquo;t merely larger models, but <em>smarter</em>, more <em>efficient</em>, and more <em>reliable</em> ones. Through clever architectural modifications, targeted interventions on internal representations, and principled approaches to data and control, we&rsquo;re learning to extract more capability from existing architectures. The most exciting developments treat the LLM not as an impenetrable black box but as a system whose internal mechanics we can understand, measure, and surgically improve. As we move toward more autonomous and capable agents, this mechanistic understanding—coupled with rigorous new evaluation paradigms—will be essential for building systems we can truly trust.</p>
+        </div>
+        <a href="index.html" class="back-link">&larr; All reports</a>
+        <div class="article-nav"><a class="nav-older" href="report-2026-04-13.html">&larr; A Geometric Dance with Text: From Anisotropy to Ad</a></div>
+    </main>
+    <footer>
+        <div class="container">Built with <a href="https://github.com/max-fofanov/preprint-alert-agent">Preprint Alert Agent</a></div>
+    </footer>
+</body>
+</html>
